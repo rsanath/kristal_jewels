@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "602168301134",
+    "firebase_url": "https://kristal-jewels-6fa16.firebaseio.com",
+    "project_id": "kristal-jewels-6fa16",
+    "storage_bucket": "kristal-jewels-6fa16.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:602168301134:android:be254746cb5fb568",
+        "android_client_info": {
+          "package_name": "com.talenttakeaways.kristaljewels"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "602168301134-3061vg18i2k15ous584abgvt8ius0cso.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.talenttakeaways.kristaljewels",
+            "certificate_hash": "27a5b5918d75282c2884873c41a8fc63a95ddbc2"
+          }
+        },
+        {
+          "client_id": "602168301134-ac8o1s5rvhq7ng3erka2pv0cfsu5fhfn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-RnseQwFNv_MUY-tnG9uGC1ue89EoUmo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "602168301134-ac8o1s5rvhq7ng3erka2pv0cfsu5fhfn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
