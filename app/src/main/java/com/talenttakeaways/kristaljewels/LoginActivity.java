@@ -1,5 +1,6 @@
 package com.talenttakeaways.kristaljewels;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,11 +16,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.talenttakeaways.kristaljewels.beans.User;
 
 public class LoginActivity extends AppCompatActivity {
     EditText inputEmail, inputPassword;
     TextView signupLink;
     Button loginButton;
+    ProgressDialog pd;
 
     //strings
     private String email, password;
@@ -32,6 +39,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        mAuth = FirebaseAuth.getInstance();
+        checkLoginStatus();
+
+        pd = new ProgressDialog(this);
         loginButton = (Button) findViewById(R.id.login_button);
         signupLink = (TextView) findViewById(R.id.signup_link);
         inputEmail = (EditText) findViewById(R.id.login_email);
@@ -48,6 +59,11 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //show the progress dialog
+                pd.setMessage("Logging In..");
+                pd.setCancelable(false);
+                pd.show();
+
                 email = inputEmail.getText().toString().trim();
                 password = inputPassword.getText().toString().trim();
                 if(!validateForm()){return;}
@@ -57,17 +73,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     public void validateUser(String email, String password) {
-        //get an instance of FirebaseAuth
-        mAuth = FirebaseAuth.getInstance();
         //firebase method to signin the user
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        pd.dismiss();
                         if (task.isSuccessful()) {
-                            showToast("Logged In Succesfully!");
                             finish();
-                            startActivity(new Intent(getApplicationContext(), HomePage.class));
+                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         } else {
                             showToast("Login Failed :(");
                         }
@@ -75,8 +89,26 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
+    public void isAdmin(FirebaseAuth mAuth){
+        final boolean[] re = new boolean[1];
+        String uId = mAuth.getCurrentUser().getUid();
+        FirebaseDatabase db = FirebaseDatabase.getInstance();
+                db.getReference("users").child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for(DataSnapshot userDetails : dataSnapshot.getChildren()) {
+                            User user = userDetails.getValue(User.class);
+                            showToast(user.isAdmin);
+                        }
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
+    }
+
     public void showToast(String text) {
-        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT);
+        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
     public boolean validateForm() {
@@ -96,5 +128,12 @@ public class LoginActivity extends AppCompatActivity {
             return false;
         }
         return true;
+    }
+
+    public void checkLoginStatus(){
+        if(mAuth.getCurrentUser() != null){
+            finish();
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+        }
     }
 }

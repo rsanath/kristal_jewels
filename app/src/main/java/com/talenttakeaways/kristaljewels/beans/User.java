@@ -5,23 +5,16 @@ package com.talenttakeaways.kristaljewels.beans;
  */
 
 public class User {
-    String name, email, password, number;
+    public String name, email, password, number, isAdmin;
 
-    public User(String name, String email, String password, String number) {
+    public User(String name, String email, String password, String number, String isAdmin) {
         this.name = name;
         this.email = email;
         this.password = password;
         this.number = number;
+        this.isAdmin = isAdmin;
     }
 
     public User() {
-    }
-
-    @Override
-    public String toString() {
-        return "Name : "+name+
-                "Email : "+email+
-                "Password : "+password+
-                "Number : "+number;
     }
 }

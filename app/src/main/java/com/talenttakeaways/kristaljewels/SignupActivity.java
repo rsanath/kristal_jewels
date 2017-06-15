@@ -1,5 +1,6 @@
 package com.talenttakeaways.kristaljewels;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -26,6 +27,7 @@ public class SignupActivity extends AppCompatActivity
     EditText email,number,password,name;
     TextView loginLink;
     Button registerButton;
+    ProgressDialog pd;
 
     //Firebase stuff
     private DatabaseReference dbReference;
@@ -35,12 +37,12 @@ public class SignupActivity extends AppCompatActivity
     String userName, userEmail, userPassword, userNumber;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
         mAuth = FirebaseAuth.getInstance();
+        pd = new ProgressDialog(this);
 
         //register button and login link
         loginLink = (TextView) findViewById(R.id.login_link);
@@ -58,6 +60,11 @@ public class SignupActivity extends AppCompatActivity
             @Override
             public void onClick(View v) {
 
+                //show the ProgressDialog
+                pd.setMessage("Registering..");
+                pd.setCancelable(false);
+                pd.show();
+
                 //get the text entered by user
                 userName = name.getText().toString().trim();
                 userEmail = email.getText().toString().trim();
@@ -66,6 +73,7 @@ public class SignupActivity extends AppCompatActivity
 
                 //validate user inputs
                 if(!validateForm()){return;}
+
                 createUser(userEmail, userPassword);
             }
         });
@@ -88,13 +96,9 @@ public class SignupActivity extends AppCompatActivity
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, then add the user details to the database
-                            showToast("User Created");
                             addUserDetails(mAuth.getCurrentUser());
                         } else {
-                            showToast("Sign up failed");
-                            // If sign in fails, display a message to the user.
-
+                            showToast("Registration Failed !");
                         }
                     }
                 });
@@ -107,7 +111,7 @@ public class SignupActivity extends AppCompatActivity
         dbReference = FirebaseDatabase.getInstance().getReference();
 
         //use the container class to hold the values entered by the user
-        User myUser = new User(userName, userEmail, userPassword, userNumber);
+        User myUser = new User(userName, userEmail, userPassword, userNumber, "false");
 
         // what happens here is we get a reference to the database/users/'usesrId'
         //then we add the user details under that structure
@@ -115,9 +119,13 @@ public class SignupActivity extends AppCompatActivity
                 addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        //dismiss the progress dialog
+                        pd.dismiss();
                         if (task.isSuccessful()) {
                             //If user is added to database
                             showToast("Registration Successful!");
+                            finish();
+                            startActivity(new Intent(SignupActivity.this, HomeActivity.class));
                         } else {
                             //if it fails
                             showToast("Registration Failed!");
