@@ -92,10 +92,6 @@ public class HomeActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
         logoutButton = (Button) findViewById(R.id.logout_button);
         logoutButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -153,7 +149,7 @@ public class HomeActivity extends AppCompatActivity {
         };
 
         mPager = (ViewPager) findViewById(R.id.home_image_slide);
-        mPager.setAdapter(new MyAdapter(HomeActivity.this, imagesArray));
+        mPager.setAdapter(new SliderAdapter(HomeActivity.this, imagesArray));
         CircleIndicator indicator = (CircleIndicator) findViewById(R.id.home_circle_indicator);
         indicator.setViewPager(mPager);
 
@@ -178,13 +174,13 @@ public class HomeActivity extends AppCompatActivity {
 
 }
 
-class MyAdapter extends PagerAdapter {
+class SliderAdapter extends PagerAdapter {
 
     private LayoutInflater inflater;
     private Context context;
     private String[] images;
 
-    public MyAdapter(Context context, String[] images) {
+    public SliderAdapter(Context context, String[] images) {
         this.context = context;
         this.images=images;
         inflater = LayoutInflater.from(context);

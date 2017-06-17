@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_grad"
     android:orientation="vertical">
 
     <LinearLayout
@@ -36,7 +35,7 @@
             android:layout_height="wrap_content"
             android:text="Our Collections"
             android:textAlignment="center"
-            android:textColor="@color/common_google_signin_btn_text_dark_default"
+            android:textColor="#000"
             android:textSize="18sp"
             android:textStyle="bold" />
 
@@ -72,7 +71,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Necklaces"
-                        android:textColor="@android:color/white" />
+                        android:textAlignment="center"
+                        android:textColor="@color/colorAccent" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -92,7 +92,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Bangles"
-                        android:textColor="@android:color/white" />
+                        android:textAlignment="center"
+                        android:textColor="#000" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -106,8 +107,10 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center"
                     android:orientation="vertical"
-                    android:padding="10dp">
+                    android:padding="10dp"
+                    android:textAlignment="center">
 
                     <ImageView
                         android:id="@+id/section_image_3"
@@ -120,7 +123,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rings"
-                        android:textColor="@android:color/white" />
+                        android:textAlignment="center"
+                        android:textColor="#000" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -140,7 +144,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Earrings"
-                        android:textColor="@android:color/white" />
+                        android:textAlignment="center"
+                        android:textColor="#000" />
                 </LinearLayout>
             </LinearLayout>
         </LinearLayout>
@@ -152,7 +157,7 @@
             android:layout_marginRight="20dp"
             android:text="View All"
             android:textAlignment="textEnd"
-            android:textColor="@android:color/background_light" />
+            android:textColor="#000" />
 
         <Button
             android:id="@+id/logout_button"
