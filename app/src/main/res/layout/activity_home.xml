@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_grad">
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -61,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:text="Our Collections"
                     android:textAlignment="center"
-                    android:textColor="#000"
+                    android:textColor="#fff"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -98,7 +99,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Necklaces"
                                 android:textAlignment="center"
-                                android:textColor="@color/colorAccent" />
+                                android:textColor="#fff" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -119,7 +120,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Bangles"
                                 android:textAlignment="center"
-                                android:textColor="#000" />
+                                android:textColor="#fff" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -150,7 +151,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Rings"
                                 android:textAlignment="center"
-                                android:textColor="#000" />
+                                android:textColor="#fff" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -171,7 +172,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="Earrings"
                                 android:textAlignment="center"
-                                android:textColor="#000" />
+                                android:textColor="#fff" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -183,7 +184,7 @@
                     android:layout_marginRight="20dp"
                     android:text="View All"
                     android:textAlignment="textEnd"
-                    android:textColor="#000" />
+                    android:textColor="#fff" />
 
                 <Button
                     android:id="@+id/logout_button"

@@ -14,7 +14,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,16 +33,19 @@ import me.relex.circleindicator.CircleIndicator;
  */
 
 public class HomeActivity extends AppCompatActivity {
+
     //Stuff for the image slide (PageViewer)
     private static ViewPager mPager;
     private static int currentPage = 0;
-    Button logoutButton;
+
+    //FirebaseDatabase db;
     FirebaseAuth mAuth;
-    //    FirebaseDatabase db;
     DatabaseReference dbRef;
     ImageView sectionImages, categoryImage1, categoryImage2, categoryImage3, categoryImage4;
     ProgressDialog pd;
-    Toolbar toolbar;
+
+    //toolbar and navigation drawer
+    private Toolbar toolbar;
     private DrawerLayout drawerLayout;
 
     @Override
@@ -95,16 +97,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-
-        logoutButton = (Button) findViewById(R.id.logout_button);
-        logoutButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut();
-                finish();
-                startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-            }
-        });
     }
 
     @Override
@@ -120,12 +112,13 @@ public class HomeActivity extends AppCompatActivity {
                 .override(400, 400).into(sectionImages);
 
         sectionImages = (ImageView) findViewById(R.id.section_image_3);
-        Glide.with(this).load("http://www.pngadgilandsons.com/wp-content/uploads/Bangle-131.jpg")
+        Glide.with(this).load("https://climg7.bluestone.com/f_jpg,c_scale,w_418,b_rgb:f0f0f0/giprod" +
+                "uct/BISM0018B09-POSTER-7426.jpg")
                 .override(400, 400).into(sectionImages);
 
         sectionImages = (ImageView) findViewById(R.id.section_image_4);
-        Glide.with(this).load("http://www.janhaviartjewellery.com/wp-content/gallery/fashion-earrings/" +
-                "indian-traditional-earrings-online-shopping.jpg")
+        Glide.with(this).load("http://www.dhresource.com/200x200s/f2-albu-g5-M00-AC-1B-rBVaI1kYM3uAJL-" +
+                "DAA1vJR8cWdg356.jpg/huche-vintage-copper-earrings-the-shape-of.jpg")
                 .override(400, 400).into(sectionImages);
 
     }
@@ -200,6 +193,11 @@ public class HomeActivity extends AppCompatActivity {
                     case R.id.nav_about:
                         //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         drawerLayout.closeDrawers();
+                        break;
+                    case R.id.nav_logout:
+                        mAuth.signOut();
+                        finish();
+                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                         break;
                 }
                 return true;
