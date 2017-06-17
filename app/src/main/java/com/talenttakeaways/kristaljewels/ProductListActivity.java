@@ -21,6 +21,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.talenttakeaways.kristaljewels.adapters.ProductsAdapter;
 import com.talenttakeaways.kristaljewels.beans.Product;
 
 import java.util.ArrayList;

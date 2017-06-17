@@ -1,25 +1,28 @@
 package com.talenttakeaways.kristaljewels;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.view.PagerAdapter;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
+import com.talenttakeaways.kristaljewels.adapters.SliderAdapter;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -31,17 +34,17 @@ import me.relex.circleindicator.CircleIndicator;
  */
 
 public class HomeActivity extends AppCompatActivity {
-    Button logoutButton;
-    FirebaseAuth mAuth;
-//    FirebaseDatabase db;
-    DatabaseReference dbRef;
-
-    ImageView sectionImages, categoryImage1, categoryImage2, categoryImage3, categoryImage4;
-    ProgressDialog pd;
-
     //Stuff for the image slide (PageViewer)
     private static ViewPager mPager;
     private static int currentPage = 0;
+    Button logoutButton;
+    FirebaseAuth mAuth;
+    //    FirebaseDatabase db;
+    DatabaseReference dbRef;
+    ImageView sectionImages, categoryImage1, categoryImage2, categoryImage3, categoryImage4;
+    ProgressDialog pd;
+    Toolbar toolbar;
+    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class HomeActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         checkLoginStatus();
         initSlider();
+        initNavigationDrawer();
 
         categoryImage1 = (ImageView) findViewById(R.id.section_image_1);
         categoryImage1.setOnClickListener(new View.OnClickListener() {
@@ -103,7 +107,6 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
@@ -127,15 +130,15 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    public void checkLoginStatus(){
-        if(mAuth.getCurrentUser() == null){
+    public void checkLoginStatus() {
+        if (mAuth.getCurrentUser() == null) {
             finish();
             showToast("You must login first!");
             startActivity(new Intent(HomeActivity.this, LoginActivity.class));
         }
     }
 
-    public void showToast(String text){
+    public void showToast(String text) {
         Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
     }
 
@@ -172,48 +175,56 @@ public class HomeActivity extends AppCompatActivity {
         }, 2500, 2500);
     }
 
+    public void initNavigationDrawer() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.nav_home:
+                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                        drawerLayout.closeDrawers();
+                        break;
+                    case R.id.nav_all_categories:
+                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                        drawerLayout.closeDrawers();
+                        break;
+                    case R.id.nav_settings:
+                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                        drawerLayout.closeDrawers();
+                        break;
+                    case R.id.nav_faq:
+                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                        drawerLayout.closeDrawers();
+                        break;
+                    case R.id.nav_about:
+                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
+                        drawerLayout.closeDrawers();
+                        break;
+                }
+                return true;
+            }
+        });
+        View header = navigationView.getHeaderView(0);
+        TextView userName = (TextView) header.findViewById(R.id.nav_header_text);
+        userName.setText("TODO userName");
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
+
+            @Override
+            public void onDrawerClosed(View v) {
+                super.onDrawerClosed(v);
+            }
+
+            @Override
+            public void onDrawerOpened(View v) {
+                super.onDrawerOpened(v);
+            }
+        };
+        drawerLayout.addDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+    }
 }
 
-class SliderAdapter extends PagerAdapter {
-
-    private LayoutInflater inflater;
-    private Context context;
-    private String[] images;
-
-    public SliderAdapter(Context context, String[] images) {
-        this.context = context;
-        this.images=images;
-        inflater = LayoutInflater.from(context);
-    }
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((View) object);
-    }
-
-    @Override
-    public int getCount() {
-        return images.length;
-    }
-
-    @Override
-    public Object instantiateItem(ViewGroup view, int position) {
-
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View myImageLayout = inflater.inflate(R.layout.slide_view_image, view, false);
-        ImageView myImage = (ImageView) myImageLayout.findViewById(R.id.image);
-
-        Glide.with(context)
-                .load(images[position])
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .into(myImage);
-
-        view.addView(myImageLayout, 0);
-        return myImageLayout;
-    }
-
-    @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return view.equals(object);
-    }
-}

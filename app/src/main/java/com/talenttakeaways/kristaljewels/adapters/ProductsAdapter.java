@@ -1,4 +1,4 @@
-package com.talenttakeaways.kristaljewels;
+package com.talenttakeaways.kristaljewels.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.talenttakeaways.kristaljewels.R;
 import com.talenttakeaways.kristaljewels.beans.Product;
 
 import java.util.ArrayList;
