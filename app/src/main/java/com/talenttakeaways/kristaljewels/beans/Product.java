@@ -1,14 +1,16 @@
 package com.talenttakeaways.kristaljewels.beans;
 
+import org.parceler.Parcel;
+
 import java.util.ArrayList;
 
 /**
  * Created by sanath on 13/06/17.
  */
 
+@Parcel
 public class Product {
     public String productId, productName, productPrice, productDescription, productCategory, productRating, productStockLeft;
-//    public String productComments;
     public ArrayList<String> productImages, productSizes, productColors, productTags;
 
     public Product() {

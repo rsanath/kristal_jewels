@@ -4,4 +4,6 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="drawer_open">Navigation Drawer Open</string>
     <string name="drawer_close">Navigation Drawer Close</string>
+    <string name="title_activity_product_detail">ProductDetailActivity</string>
+    <string name="action_settings">Settings</string>
 </resources>

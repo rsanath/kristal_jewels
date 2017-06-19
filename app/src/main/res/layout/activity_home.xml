@@ -187,12 +187,12 @@
                     android:textColor="#fff" />
 
                 <Button
-                    android:id="@+id/logout_button"
+                    android:id="@+id/product_page"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="30dp"
                     android:background="@color/colorPrimary"
-                    android:text="Log Out"
+                    android:text="product"
                     android:textAllCaps="false"
                     android:textColor="#ffffff" />
             </LinearLayout>

@@ -14,11 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.talenttakeaways.kristaljewels.adapters.SliderAdapter;
@@ -57,6 +59,14 @@ public class HomeActivity extends AppCompatActivity {
         checkLoginStatus();
         initSlider();
         initNavigationDrawer();
+
+        Button product = (Button) findViewById(R.id.product_page);
+        product.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), ProductDetailActivity.class));
+            }
+        });
 
         categoryImage1 = (ImageView) findViewById(R.id.section_image_1);
         categoryImage1.setOnClickListener(new View.OnClickListener() {
@@ -104,7 +114,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onStart();
 
         sectionImages = (ImageView) findViewById(R.id.section_image_1);
-        Glide.with(this).load("https://goo.gl/8lwO3K")
+        Glide.with(this).load("https://goo.gl/8lwO3K").diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .override(400, 400).into(sectionImages);
 
         sectionImages = (ImageView) findViewById(R.id.section_image_2);
