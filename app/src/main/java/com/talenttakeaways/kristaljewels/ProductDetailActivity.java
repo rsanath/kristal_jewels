@@ -5,9 +5,12 @@ import android.os.Bundle;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +42,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     TextView productName, productPrice, productDescription;
     EditText commentBox;
     ImageView productImage, commentButton;
+    LinearLayout reviewSection;
     ExpandableHeightListView productComments;
     Product product;
 
@@ -47,37 +51,20 @@ public class ProductDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
 
-//        parent = (NestedScrollView) findViewById(R.id.product_view);
-//        parent.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener(){
-//            public void onGlobalLayout(){
-//                int heightDiff = parent.getRootView().getHeight()- parent.getHeight();
-//                // IF height diff is more then 150, consider keyboard as visible.
-//                if(heightDiff > 150){
-//                    // Its keyboard mostly
-//                    parent.setPadding(0, 0, 0, heightDiff);
-//                }
-//                else if(heightDiff < 150){
-//                    // Keyboard goes away, readjust
-//                    parent.setPadding(0, 0, 0, 0);
-//                }
-//            }
-//        });
-
         Intent intent = getIntent();
         product = Parcels.unwrap(intent.getParcelableExtra("product"));
-
         db = FirebaseDatabase.getInstance().getReference();
         fbUser = FirebaseAuth.getInstance().getCurrentUser();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(product.getProductName());
         setSupportActionBar(toolbar);
-
         setView();
 
     }
 
     public void setView(){
+        setComments();
         productImage = (ImageView) findViewById(R.id.product_cover);
         productName = (TextView) findViewById(R.id.product_name);
         productPrice = (TextView) findViewById(R.id.product_price);
@@ -85,9 +72,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         commentBox = (EditText) findViewById(R.id.comment_box);
         commentButton = (ImageView) findViewById(R.id.comment_button);
         productComments = (ExpandableHeightListView) findViewById(R.id.product_comments);
+        reviewSection = (LinearLayout) findViewById(R.id.review_section);
 
         // Set all values
-        setComments();
         if(product.getProductImages() != null){
             DisplayMetrics displayMetrics = new DisplayMetrics();
             getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -99,6 +86,19 @@ public class ProductDetailActivity extends AppCompatActivity {
         productName.setText(product.getProductName());
         productPrice.setText("Rs. "+product.getProductPrice());
         productDescription.setText(product.getProductDescription());
+
+        commentButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String comment = commentBox.getText().toString().trim();
+                if(TextUtils.isEmpty(comment)){
+                    Toast.makeText(getApplicationContext(), "Review can't be empty", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                //publishReview();
+                Toast.makeText(getApplicationContext(), comment, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void setComments(){
@@ -117,7 +117,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(getApplicationContext(), "Something went wrong :(", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
             }
         });
     }

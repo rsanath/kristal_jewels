@@ -23,7 +23,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                android:textAlignment="gravity"
+                app:popupTheme="@style/AppTheme.PopupOverlay">
+
+            </android.support.v7.widget.Toolbar>
         </android.support.design.widget.AppBarLayout>
 
         <ScrollView
@@ -177,24 +180,6 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="20dp"
-                    android:text="View All"
-                    android:textAlignment="textEnd"
-                    android:textColor="#fff" />
-
-                <Button
-                    android:id="@+id/product_page"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="30dp"
-                    android:background="@color/colorPrimary"
-                    android:text="product"
-                    android:textAllCaps="false"
-                    android:textColor="#ffffff" />
             </LinearLayout>
         </ScrollView>
 

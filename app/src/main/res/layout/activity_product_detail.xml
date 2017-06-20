@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:isScrollContainer="true"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:layout_marginBottom="30dp"
     tools:context="com.talenttakeaways.kristaljewels.ProductDetailActivity">
 
     <android.support.design.widget.AppBarLayout
@@ -39,7 +39,128 @@
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_product_detail" />
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context="com.talenttakeaways.kristaljewels.ProductDetailActivity">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="0px"
+                android:layout_height="0px"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
+
+            <TextView
+                android:id="@+id/product_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="Nugget Nectar"
+                android:textAlignment="center"
+                android:textColor="#000"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/round_layout"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/product_price"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:padding="10dp"
+                    android:text="2000 $"
+                    android:textAlignment="center"
+                    android:textColor="#000"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/product_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:text="I'm migrating from ActionBar to Toolbar in my application.
+            But I don't know how to display and set click event on Back Arrow on Toolbar like I did on Actionbar. "
+                android:textAlignment="center"
+                android:textColor="#3e3e3e"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:textColor="#000"
+                    android:text="Reviews"
+                    android:paddingBottom="3dp"/>
+
+                <android.support.v4.widget.NestedScrollView
+                    android:layout_width="wrap_content"
+                    android:background="@drawable/round_layout"
+                    android:layout_height="300dp">
+                    <com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView
+                        android:id="@+id/product_comments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="5dp" />
+                </android.support.v4.widget.NestedScrollView>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16dp"
+                    android:textColor="#000"
+                    android:text="Your Rating"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="3dp"/>
+
+                <LinearLayout
+                    android:id="@+id/review_section"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:baselineAligned="true">
+
+                    <EditText
+                        android:id="@+id/comment_box"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:hint="Write your review here"
+                        android:inputType="textPersonName"
+                        android:selectAllOnFocus="false" />
+
+                    <ImageView
+                        android:id="@+id/comment_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingTop="14dp"
+                        android:paddingBottom="14dp"
+                        android:layout_weight="1"
+                        app:srcCompat="@drawable/ic_send_black_24dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -22,12 +22,13 @@
         <activity
             android:name=".HomeActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ProductListActivity" />
+        <activity android:name=".ProductListActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ProductDetailActivity"
             android:label="@string/title_activity_product_detail"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize|adjustPan"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden|adjustResize|adjustPan" />
     </application>
 
 </manifest>
