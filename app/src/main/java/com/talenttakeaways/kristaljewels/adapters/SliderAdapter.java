@@ -40,7 +40,7 @@ public class SliderAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup view, int position) {
 
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View myImageLayout = inflater.inflate(R.layout.slide_view_image, view, false);
+        View myImageLayout = inflater.inflate(R.layout.image_slider, view, false);
         ImageView myImage = (ImageView) myImageLayout.findViewById(R.id.image);
 
         Glide.with(context)

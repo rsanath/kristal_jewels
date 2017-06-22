@@ -1,20 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+<ScrollView
     android:layout_height="match_parent"
-    android:background="@drawable/bg_grad">
+    android:layout_width="match_parent"
+    android:background="@drawable/bg_grad"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:background="@drawable/bg_grad"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp">
+        android:layout_width="match_parent"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:weightSum="1">
+
+            <ImageView
+                android:id="@+id/logo_image"
+                android:layout_width="match_parent"
+                android:layout_height="120dp"
+                android:layout_margin="20dp"
+                android:src="@drawable/kj_logo" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_marginBottom="30dp"
+            android:orientation="vertical"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -80,56 +98,52 @@
                 android:layout_height="1dp"
                 android:background="#4a5a71"></LinearLayout>
         </LinearLayout>
-    </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="20dp"
-        android:gravity="bottom"
-        android:orientation="vertical"
-        android:paddingLeft="60dp"
-        android:paddingRight="60dp">
-
-        <Button
-            android:id="@+id/login_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginBottom="50dp"
-            android:background="@color/colorPrimary"
-            android:filterTouchesWhenObscured="false"
+        <LinearLayout
             android:gravity="center"
-            android:letterSpacing="0.2"
-            android:padding="16dp"
-            android:paddingBottom="10dp"
-            android:paddingTop="10dp"
-            android:text="Login"
-            android:textAllCaps="false"
-            android:textColor="#d9e5f3"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/signup_link"
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:letterSpacing="0.1"
-            android:text="Create Account ? Signup"
-            android:textColor="#d9e5f3" />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:layout_marginBottom="400dp"
-        android:weightSum="1">
+            android:layout_width="match_parent"
+            android:paddingLeft="20dp"
+            android:paddingRight="20dp">
 
-        <ImageView
-            android:id="@+id/logo_image"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:layout_weight="0.15"
-            android:src="@drawable/kj_logo" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:gravity="bottom"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:paddingLeft="60dp"
+            android:paddingRight="60dp">
+
+            <Button
+                android:background="@color/colorPrimary"
+                android:filterTouchesWhenObscured="false"
+                android:gravity="center"
+                android:id="@+id/login_button"
+                android:layout_gravity="bottom"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:letterSpacing="0.2"
+                android:padding="16dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="Login"
+                android:textAllCaps="false"
+                android:textColor="#d9e5f3"
+                android:textStyle="bold" />
+
+            <TextView
+                android:gravity="center"
+                android:id="@+id/signup_link"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:letterSpacing="0.1"
+                android:padding="30dp"
+                android:text="Create Account ? Signup"
+                android:textColor="#d9e5f3" />
+        </LinearLayout>
+
     </LinearLayout>
-</RelativeLayout>
+</ScrollView>

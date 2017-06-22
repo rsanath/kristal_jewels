@@ -39,7 +39,7 @@ public class SignupActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup);
+        setContentView(R.layout.layout_signup);
 
         mAuth = FirebaseAuth.getInstance();
         pd = new ProgressDialog(this);
@@ -63,7 +63,6 @@ public class SignupActivity extends AppCompatActivity
                 //show the ProgressDialog
                 pd.setMessage("Registering..");
                 pd.setCancelable(false);
-                pd.show();
 
                 //get the text entered by user
                 userName = name.getText().toString().trim();
@@ -73,6 +72,7 @@ public class SignupActivity extends AppCompatActivity
 
                 //validate user inputs
                 if(!validateForm()){return;}
+                pd.show();
 
                 createUser(userEmail, userPassword);
             }

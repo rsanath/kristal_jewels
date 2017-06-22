@@ -3,8 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activityRoot"
     android:layout_width="match_parent"
-    android:isScrollContainer="true"
     android:layout_height="match_parent"
     tools:context="com.talenttakeaways.kristaljewels.ProductDetailActivity">
 
@@ -27,7 +27,7 @@
                 android:id="@+id/product_cover"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/def_img"/>
+                android:src="@drawable/def_img" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -99,21 +99,41 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <Spinner
+                    android:id="@+id/product_color"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <Spinner
+                    android:id="@+id/product_size"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16dp"
-                    android:textColor="#000"
+                    android:paddingBottom="3dp"
                     android:text="Reviews"
-                    android:paddingBottom="3dp"/>
+                    android:textColor="#000"
+                    android:textSize="16dp" />
 
                 <android.support.v4.widget.NestedScrollView
                     android:layout_width="wrap_content"
-                    android:background="@drawable/round_layout"
-                    android:layout_height="300dp">
+                    android:layout_height="300dp"
+                    android:background="@drawable/round_layout">
+
                     <com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView
                         android:id="@+id/product_comments"
                         android:layout_width="match_parent"
@@ -125,18 +145,18 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="16dp"
-                    android:textColor="#000"
-                    android:text="Your Rating"
+                    android:paddingBottom="3dp"
                     android:paddingTop="6dp"
-                    android:paddingBottom="3dp"/>
+                    android:text="Your Rating"
+                    android:textColor="#000"
+                    android:textSize="16dp" />
 
                 <LinearLayout
                     android:id="@+id/review_section"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:baselineAligned="true">
+                    android:baselineAligned="true"
+                    android:orientation="horizontal">
 
                     <EditText
                         android:id="@+id/comment_box"
@@ -152,9 +172,9 @@
                         android:id="@+id/comment_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingTop="14dp"
-                        android:paddingBottom="14dp"
                         android:layout_weight="1"
+                        android:paddingBottom="14dp"
+                        android:paddingTop="14dp"
                         app:srcCompat="@drawable/ic_send_black_24dp" />
                 </LinearLayout>
 

@@ -22,8 +22,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.talenttakeaways.kristaljewels.adapters.SliderAdapter;
@@ -56,7 +54,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_home);
+        setContentView(R.layout.layout_home);
 
         mAuth = FirebaseAuth.getInstance();
         checkLoginStatus();
@@ -138,29 +136,6 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-        sectionImages = (ImageView) findViewById(R.id.section_image_1);
-        Glide.with(this).load("https://goo.gl/8lwO3K").diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .override(400, 400).into(sectionImages);
-
-        sectionImages = (ImageView) findViewById(R.id.section_image_2);
-        Glide.with(this).load("https://goo.gl/5xfZSW")
-                .override(400, 400).into(sectionImages);
-
-        sectionImages = (ImageView) findViewById(R.id.section_image_3);
-        Glide.with(this).load("https://climg7.bluestone.com/f_jpg,c_scale,w_418,b_rgb:f0f0f0/giprod" +
-                "uct/BISM0018B09-POSTER-7426.jpg")
-                .override(400, 400).into(sectionImages);
-
-        sectionImages = (ImageView) findViewById(R.id.section_image_4);
-        Glide.with(this).load("http://www.dhresource.com/200x200s/f2-albu-g5-M00-AC-1B-rBVaI1kYM3uAJL-" +
-                "DAA1vJR8cWdg356.jpg/huche-vintage-copper-earrings-the-shape-of.jpg")
-                .override(400, 400).into(sectionImages);
-    }
-
     public void checkLoginStatus() {
         if (mAuth.getCurrentUser() == null) {
             finish();
@@ -175,11 +150,9 @@ public class HomeActivity extends AppCompatActivity {
 
     private void initSlider() {
         final String[] imagesArray = {
-                "http://pondicherryinfo.in/main/files/2012/10/Jos-Alukkas-Pondicherry.jpg",
-                "http://www.josalukkasonline.com/upload/color/jos-alukkas-Showroom-subha-mangalyam-weddin" +
-                        "g-collection-work-bn4hhr.jpg",
-                "http://www.josalukkasonline.com/upload/color/jos-alukkas-News-two-new-sh" +
-                        "owrooms-opening-in-august-2015-0bxmt6.jpg"
+                "https://assets.ritani.com/assets/116342003_poster-64977bad3a29b28c128c75601896a00c.jpg",
+                "https://cdn-az.allevents.in/banners/f73bb79b1e350b456717949ff13d7412",
+                "http://dalemku.com/x/2017/03/most-beautiful-diamond-necklace-world-dropssol-with-most-expensive-diamond-necklace.jpg"
         };
 
         mPager = (ViewPager) findViewById(R.id.home_image_slide);

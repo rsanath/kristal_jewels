@@ -55,7 +55,7 @@ public class ProductListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.list_layout);
+        setContentView(R.layout.layout_product_list);
 
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -124,6 +124,7 @@ public class ProductListActivity extends AppCompatActivity {
         }
         else if(from.equals("search")){
             searchQueryName = intent.getExtras().getString("search");
+            toolbar.setTitle("Results for '"+searchQueryName+"'");
             Query query = dbRef.child("products").child("bangles").orderByChild("productName").startAt(searchQueryName);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override

@@ -40,7 +40,6 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.layout_login);
 
         mAuth = FirebaseAuth.getInstance();
-        checkLoginStatus();
 
         pd = new ProgressDialog(this);
         loginButton = (Button) findViewById(R.id.login_button);
@@ -66,7 +65,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 email = inputEmail.getText().toString().trim();
                 password = inputPassword.getText().toString().trim();
-                if(!validateForm()){return;}
+                if(!validateForm()){
+                    pd.dismiss();
+                    return;
+                }
                 validateUser(email, password);
             }
         });
@@ -130,10 +132,4 @@ public class LoginActivity extends AppCompatActivity {
         return true;
     }
 
-    public void checkLoginStatus(){
-        if(mAuth.getCurrentUser() != null){
-            finish();
-            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-        }
-    }
 }
