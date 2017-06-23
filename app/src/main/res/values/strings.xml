@@ -10,4 +10,6 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="CART_ITEMS">CART_ITEMS</string>
+    <string name="CART">CART</string>
 </resources>

@@ -29,7 +29,6 @@
         <screen android:screenSize="large" android:screenDensity="560" />
         <screen android:screenSize="large" android:screenDensity="640" />
     </compatible-screens>
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -50,6 +49,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".CartActivity" android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".ProductDetailActivity"
             android:label="@string/title_activity_product_detail"

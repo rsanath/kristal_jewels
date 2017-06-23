@@ -60,7 +60,7 @@ public class ProductListActivity extends AppCompatActivity {
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 
         initNavigationDrawer();
 
@@ -78,59 +78,22 @@ public class ProductListActivity extends AppCompatActivity {
 
     }
 
-    public void loadData(){
-        /*we are gonna load data by tho ways
-        * 1) from buttons such as category buttons or collections button
-        * 2) from search
-        *
-        *so we get the from(button or search)
-        * if button
-        * category or collections?
-        *
-        * or else if search
-        * what to search
-        * categories or names or colors or size????
-        * */
-
+    public void loadData() {
         Intent intent = getIntent();
-        String from, type, categoryName, collectionName, searchQueryName;
+        String from, type, categoryName, searchQueryName;
 
         from = intent.getExtras().getString("from");
         type = intent.getExtras().getString("type");
 
-        if(from.equals("button")){
-            if(type.equals("category")){
-                categoryName = intent.getExtras().getString("category");
-                Log.w("CATEGORY : ", categoryName);
-                dbRef.child("products/"+categoryName).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for(DataSnapshot products : dataSnapshot.getChildren()){
-                            Product product = products.getValue(Product.class);
-                            productsList.add(product);
-                        }
-                        recyclerView.setAdapter(productsAdapter);
-                    }
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Toast.makeText(getApplicationContext(), "Something went wrong :(", Toast.LENGTH_SHORT).show();}
-                });
-
-            }
-            else if(type.equals("collection")){
-                collectionName = intent.getExtras().getString("collections");
-
-            }
-        }
-        else if(from.equals("search")){
-            searchQueryName = intent.getExtras().getString("search");
-            toolbar.setTitle("Results for '"+searchQueryName+"'");
-            Query query = dbRef.child("products").child("bangles").orderByChild("productName").startAt(searchQueryName);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
+        if (from.equals("button")) {
+            categoryName = intent.getExtras().getString("category");
+            dbRef.child("products").orderByChild("productCategory").equalTo(categoryName)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
-                            for(DataSnapshot products : dataSnapshot.getChildren()){
+                            for (DataSnapshot products : dataSnapshot.getChildren()) {
                                 Product product = products.getValue(Product.class);
+                                Log.d("Category Results ", product.getProductName() + product.getProductColors());
                                 productsList.add(product);
                             }
                             recyclerView.setAdapter(productsAdapter);
@@ -138,47 +101,29 @@ public class ProductListActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-
+                            Toast.makeText(getApplicationContext(), "Something went wrong :(", Toast.LENGTH_SHORT).show();
                         }
                     });
         }
-    }
-
-    /**
-     * RecyclerView item decoration - give equal margin around grid item
-     */
-    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
-
-        private int spanCount;
-        private int spacing;
-        private boolean includeEdge;
-
-        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
-            this.spanCount = spanCount;
-            this.spacing = spacing;
-            this.includeEdge = includeEdge;
-        }
-
-        @Override
-        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-            int position = parent.getChildAdapterPosition(view); // item position
-            int column = position % spanCount; // item column
-
-            if (includeEdge) {
-                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
-                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
-
-                if (position < spanCount) { // top edge
-                    outRect.top = spacing;
+        else if (from.equals("search")) {
+            searchQueryName = intent.getExtras().getString("search");
+            dbRef.child("products").orderByChild("productTag").startAt(searchQueryName)
+                    .addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    for (DataSnapshot products : dataSnapshot.getChildren()) {
+                        Product product = products.getValue(Product.class);
+                        Log.d("Search Results ", product.getProductName() + product.getProductColors());
+                        productsList.add(product);
+                    }
+                    recyclerView.setAdapter(productsAdapter);
                 }
-                outRect.bottom = spacing; // item bottom
-            } else {
-                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
-                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
-                if (position >= spanCount) {
-                    outRect.top = spacing; // item top
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
                 }
-            }
+            });
         }
     }
 
@@ -235,5 +180,43 @@ public class ProductListActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+    /**
+     * RecyclerView item decoration - give equal margin around grid item
+     */
+    public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
+
+        private int spanCount;
+        private int spacing;
+        private boolean includeEdge;
+
+        public GridSpacingItemDecoration(int spanCount, int spacing, boolean includeEdge) {
+            this.spanCount = spanCount;
+            this.spacing = spacing;
+            this.includeEdge = includeEdge;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            int position = parent.getChildAdapterPosition(view); // item position
+            int column = position % spanCount; // item column
+
+            if (includeEdge) {
+                outRect.left = spacing - column * spacing / spanCount; // spacing - column * ((1f / spanCount) * spacing)
+                outRect.right = (column + 1) * spacing / spanCount; // (column + 1) * ((1f / spanCount) * spacing)
+
+                if (position < spanCount) { // top edge
+                    outRect.top = spacing;
+                }
+                outRect.bottom = spacing; // item bottom
+            } else {
+                outRect.left = column * spacing / spanCount; // column * ((1f / spanCount) * spacing)
+                outRect.right = spacing - (column + 1) * spacing / spanCount; // spacing - (column + 1) * ((1f /    spanCount) * spacing)
+                if (position >= spanCount) {
+                    outRect.top = spacing; // item top
+                }
+            }
+        }
     }
 }

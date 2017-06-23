@@ -10,8 +10,9 @@ import java.util.ArrayList;
 
 @Parcel
 public class Product {
-    public String productId, productName, productPrice, productDescription, productCategory, productRating, productStockLeft;
-    public ArrayList<String> productImages, productSizes, productColors, productTags;
+    public String productId, productName, productPrice, productDescription, productCategory,
+            productTag, productStockLeft;
+    public ArrayList<String> productImages, productSizes, productColors;
 
     public Product() {
     }
@@ -40,12 +41,12 @@ public class Product {
         this.productPrice = productPrice;
     }
 
-    public ArrayList<String> getProductTags() {
-        return productTags;
+    public String getProductTag() {
+        return productTag;
     }
 
-    public void setProductTags(ArrayList<String> productTags) {
-        this.productTags = productTags;
+    public void setProductTag(String productTag) {
+        this.productTag = productTag;
     }
 
     public String getProductDescription() {
@@ -62,14 +63,6 @@ public class Product {
 
     public void setProductCategory(String productCategory) {
         this.productCategory = productCategory;
-    }
-
-    public String getProductRating() {
-        return productRating;
-    }
-
-    public void setProductRating(String productRating) {
-        this.productRating = productRating;
     }
 
     public String getProductStockLeft() {

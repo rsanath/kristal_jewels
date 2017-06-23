@@ -37,6 +37,8 @@ import me.relex.circleindicator.CircleIndicator;
 
 public class HomeActivity extends AppCompatActivity {
 
+    int counter = 0;
+
     //Stuff for the image slide (PageViewer)
     private static ViewPager mPager;
     private static int currentPage = 0;
@@ -44,7 +46,7 @@ public class HomeActivity extends AppCompatActivity {
     //FirebaseDatabase db;
     FirebaseAuth mAuth;
     DatabaseReference dbRef;
-    ImageView sectionImages, categoryImage1, categoryImage2, categoryImage3, categoryImage4;
+    ImageView categoryImage1, categoryImage2, categoryImage3, categoryImage4;
     ProgressDialog pd;
 
     //toolbar and navigation drawer
@@ -67,8 +69,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ProductListActivity.class);
                 intent.putExtra("from", "button");
-                intent.putExtra("type", "category");
-                intent.putExtra("category", "necklaces");
+                intent.putExtra("category", "necklace");
                 startActivity(intent);
             }
         });
@@ -78,8 +79,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ProductListActivity.class);
                 intent.putExtra("from", "button");
-                intent.putExtra("type", "category");
-                intent.putExtra("category", "bangles");
+                intent.putExtra("category", "bangle");
                 startActivity(intent);
             }
         });
@@ -90,8 +90,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ProductListActivity.class);
                 intent.putExtra("from", "button");
-                intent.putExtra("type", "category");
-                intent.putExtra("category", "rings");
+                intent.putExtra("category", "ring");
                 startActivity(intent);
             }
         });
@@ -102,8 +101,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ProductListActivity.class);
                 intent.putExtra("from", "button");
-                intent.putExtra("type", "category");
-                intent.putExtra("category", "earrings");
+                intent.putExtra("category", "earring");
                 startActivity(intent);
             }
         });
@@ -132,8 +130,17 @@ public class HomeActivity extends AppCompatActivity {
                 return false;
             }
         });
-        return super.onCreateOptionsMenu(menu);
 
+        MenuItem cartButton = menu.findItem(R.id.open_cart);
+        cartButton.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                startActivity(new Intent(getApplicationContext(), CartActivity.class));
+                return false;
+            }
+        });
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     public void checkLoginStatus() {
@@ -176,7 +183,7 @@ public class HomeActivity extends AppCompatActivity {
             public void run() {
                 handler.post(Update);
             }
-        }, 2500, 2500);
+        }, 3500, 3500);
     }
 
     public void initNavigationDrawer() {
@@ -186,7 +193,6 @@ public class HomeActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.nav_home:
-                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.nav_all_categories:

@@ -62,7 +62,7 @@ public class SignupActivity extends AppCompatActivity
 
                 //show the ProgressDialog
                 pd.setMessage("Registering..");
-                pd.setCancelable(false);
+                pd.setCanceledOnTouchOutside(false);
 
                 //get the text entered by user
                 userName = name.getText().toString().trim();
@@ -98,6 +98,7 @@ public class SignupActivity extends AppCompatActivity
                         if (task.isSuccessful()) {
                             addUserDetails(mAuth.getCurrentUser());
                         } else {
+                            pd.dismiss();
                             showToast("Registration Failed !");
                         }
                     }

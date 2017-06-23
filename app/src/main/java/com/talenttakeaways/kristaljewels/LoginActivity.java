@@ -2,6 +2,7 @@ package com.talenttakeaways.kristaljewels;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -60,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //show the progress dialog
                 pd.setMessage("Logging In..");
-                pd.setCancelable(false);
+                pd.setCanceledOnTouchOutside(false);
                 pd.show();
 
                 email = inputEmail.getText().toString().trim();
@@ -82,26 +83,30 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         pd.dismiss();
                         if (task.isSuccessful()) {
+                            saveUserDetails(mAuth);
                             finish();
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         } else {
+                            pd.dismiss();
                             showToast("Login Failed :(");
                         }
                     }
                 });
     }
 
-    public void isAdmin(FirebaseAuth mAuth){
-        final boolean[] re = new boolean[1];
-        String uId = mAuth.getCurrentUser().getUid();
+    public void saveUserDetails(FirebaseAuth mAuth){
+        final String uId = mAuth.getCurrentUser().getUid();
         FirebaseDatabase db = FirebaseDatabase.getInstance();
                 db.getReference("users").child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-                        for(DataSnapshot userDetails : dataSnapshot.getChildren()) {
-                            User user = userDetails.getValue(User.class);
-                            showToast(user.isAdmin);
-                        }
+
+                        User user = dataSnapshot.getValue(User.class);
+                        SharedPreferences sp = getSharedPreferences("CURRENT_USER", MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putString("CURRENT_USER_NAME", user.getName());
+                        editor.putString("CURRENT_USER_EMAIL", user.getEmail());
+                        editor.commit();
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
