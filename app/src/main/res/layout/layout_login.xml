@@ -135,13 +135,24 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:gravity="center"
                 android:id="@+id/signup_link"
+                android:gravity="center"
+                android:layout_marginTop="25dp"
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
                 android:letterSpacing="0.1"
-                android:padding="30dp"
-                android:text="Create Account ? Signup"
+                android:padding="15dp"
+                android:text="New user? Sign up here!"
+                android:textColor="#d9e5f3" />
+
+            <TextView
+                android:id="@+id/forgot_password_link"
+                android:gravity="center"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:letterSpacing="0.1"
+                android:padding="15dp"
+                android:text="Forgot Password?"
                 android:textColor="#d9e5f3" />
         </LinearLayout>
 

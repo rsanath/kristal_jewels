@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.talenttakeaways.kristaljewels.adapters.SliderAdapter;
+import com.talenttakeaways.kristaljewels.others.Constants;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -68,8 +69,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ProductListActivity.class);
-                intent.putExtra("from", "button");
-                intent.putExtra("category", "necklace");
+                intent.putExtra(Constants.from, Constants.button);
+                intent.putExtra(Constants.category, Constants.necklace);
                 startActivity(intent);
             }
         });
@@ -78,8 +79,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ProductListActivity.class);
-                intent.putExtra("from", "button");
-                intent.putExtra("category", "bangle");
+                intent.putExtra(Constants.from, Constants.button);
+                intent.putExtra(Constants.category, Constants.bangle);
                 startActivity(intent);
             }
         });
@@ -89,8 +90,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ProductListActivity.class);
-                intent.putExtra("from", "button");
-                intent.putExtra("category", "ring");
+                intent.putExtra(Constants.from, Constants.button);
+                intent.putExtra(Constants.category, Constants.ring);
                 startActivity(intent);
             }
         });
@@ -100,8 +101,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getApplicationContext(), ProductListActivity.class);
-                intent.putExtra("from", "button");
-                intent.putExtra("category", "earring");
+                intent.putExtra(Constants.from, Constants.button);
+                intent.putExtra(Constants.category, Constants.earring);
                 startActivity(intent);
             }
         });
@@ -119,8 +120,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public boolean onQueryTextSubmit(String query) {
                 Intent intent = new Intent(getApplicationContext(), ProductListActivity.class);
-                intent.putExtra("from", "search");
-                intent.putExtra("search", query);
+                intent.putExtra(Constants.from, Constants.search);
+                intent.putExtra(Constants.search, query);
                 startActivity(intent);
                 return false;
             }

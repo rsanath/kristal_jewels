@@ -25,9 +25,6 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    //java faker
-    compile group: 'com.github.javafaker', name: 'javafaker', version: '0.13'
-
     compile 'com.android.support:appcompat-v7:21.0.3'
     compile 'com.google.firebase:firebase-auth:10.0.1'
     compile 'com.google.firebase:firebase-database:10.0.1'
@@ -36,19 +33,31 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:21.0.3'
     testCompile 'junit:junit:4.12'
 
+    //java faker
+    compile group: 'com.github.javafaker', name: 'javafaker', version: '0.13'
+
     //glide image loader library
     compile 'com.github.bumptech.glide:glide:3.5.2'
+
+    //material dialogs
+    compile 'com.afollestad.material-dialogs:core:0.9.4.5'
 
     //circle indicator
     compile 'me.relex:circleindicator:1.2.2@aar'
 
-    //ExpandableHeightListView for adding a listview inside
-    //a scroll view which is not possible by default
+    //ExpandableHeightListView
     compile 'com.github.paolorotolo:expandableheightlistview:1.0.0'
 
     //Parceler for sending custon objects through intents
     compile 'org.parceler:parceler-api:1.1.6'
     annotationProcessor 'org.parceler:parceler:1.1.6'
+
+    //butter knife
+    compile 'com.jakewharton:butterknife:8.7.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
+
+    //gson
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.3.1'
 
 }
 apply plugin: 'com.google.gms.google-services'

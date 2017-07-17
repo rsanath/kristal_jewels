@@ -1,18 +1,20 @@
 package com.talenttakeaways.kristaljewels;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -21,13 +23,27 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.talenttakeaways.kristaljewels.beans.User;
+import com.talenttakeaways.kristaljewels.others.CommonFunctions;
+import com.talenttakeaways.kristaljewels.others.Constants;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
+import static com.talenttakeaways.kristaljewels.others.CommonFunctions.getDismissDialog;
+import static com.talenttakeaways.kristaljewels.others.CommonFunctions.showToast;
 
 public class LoginActivity extends AppCompatActivity {
-    EditText inputEmail, inputPassword;
-    TextView signupLink;
-    Button loginButton;
+
+    Activity context = this;
     ProgressDialog pd;
+
+    @BindView(R.id.forgot_password_link) TextView forgotPassLink;
+    @BindView(R.id.login_button) Button loginButton;
+    @BindView(R.id.signup_link) TextView signupLink;
+    @BindView(R.id.login_email) EditText inputEmail;
+    @BindView(R.id.login_password) EditText inputPassword;
 
     //strings
     private String email, password;
@@ -39,14 +55,11 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_login);
+        ButterKnife.bind(context);
 
         mAuth = FirebaseAuth.getInstance();
 
-        pd = new ProgressDialog(this);
-        loginButton = (Button) findViewById(R.id.login_button);
-        signupLink = (TextView) findViewById(R.id.signup_link);
-        inputEmail = (EditText) findViewById(R.id.login_email);
-        inputPassword = (EditText) findViewById(R.id.login_password);
+        pd = new ProgressDialog(context);
 
         signupLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,11 +79,18 @@ public class LoginActivity extends AppCompatActivity {
 
                 email = inputEmail.getText().toString().trim();
                 password = inputPassword.getText().toString().trim();
-                if(!validateForm()){
+                if (!validateForm()) {
                     pd.dismiss();
                     return;
                 }
                 validateUser(email, password);
+            }
+        });
+
+        forgotPassLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sendPasswordResetLink();
             }
         });
     }
@@ -88,34 +108,60 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         } else {
                             pd.dismiss();
-                            showToast("Login Failed :(");
+                            showToast(context, getString(R.string.login_fail_message));
                         }
                     }
                 });
     }
 
-    public void saveUserDetails(FirebaseAuth mAuth){
+    public void saveUserDetails(FirebaseAuth mAuth) {
         final String uId = mAuth.getCurrentUser().getUid();
         FirebaseDatabase db = FirebaseDatabase.getInstance();
-                db.getReference("users").child(uId).addListenerForSingleValueEvent(new ValueEventListener() {
+        db.getReference(Constants.users).child(uId)
+                .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
-
                         User user = dataSnapshot.getValue(User.class);
-                        SharedPreferences sp = getSharedPreferences("CURRENT_USER", MODE_PRIVATE);
+
+                        SharedPreferences sp = getSharedPreferences(Constants.currentUser, MODE_PRIVATE);
                         SharedPreferences.Editor editor = sp.edit();
-                        editor.putString("CURRENT_USER_NAME", user.getName());
-                        editor.putString("CURRENT_USER_EMAIL", user.getEmail());
-                        editor.commit();
+                        String userAsJson = new Gson().toJson(user);
+                        editor.putString(Constants.currentUser, userAsJson).apply();
                     }
+
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                     }
                 });
     }
 
-    public void showToast(String text) {
-        Toast.makeText(getApplicationContext(), text, Toast.LENGTH_SHORT).show();
+    public void sendPasswordResetLink() {
+        new MaterialDialog.Builder(this)
+                .title(R.string.forgot_pass_title)
+                .content(R.string.forgot_pass_content)
+                .inputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS)
+                .input("Email Id", null, new MaterialDialog.InputCallback() {
+                    @Override
+                    public void onInput(MaterialDialog dialog, CharSequence input) {
+                        final MaterialDialog loader = CommonFunctions.getLoadingDialog(context,
+                                        R.string.loading, R.string.please_wait).show();
+
+                        FirebaseAuth.getInstance().sendPasswordResetEmail(input.toString())
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        loader.dismiss();
+                                        if (task.isSuccessful()) {
+
+                                            getDismissDialog(context, R.string.success,
+                                                    R.string.reset_email_sent_content).show();
+                                        } else {
+                                            showToast(context, getString(R.string.try_later));
+                                        }
+                                    }
+                                });
+                    }
+                }).show();
     }
 
     public boolean validateForm() {
