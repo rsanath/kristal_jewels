@@ -1,7 +1,6 @@
 package com.talenttakeaways.kristaljewels;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -32,12 +31,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.talenttakeaways.kristaljewels.others.CommonFunctions.getDismissDialog;
+import static com.talenttakeaways.kristaljewels.others.CommonFunctions.getLoadingDialog;
 import static com.talenttakeaways.kristaljewels.others.CommonFunctions.showToast;
 
 public class LoginActivity extends AppCompatActivity {
-
     Activity context = this;
-    ProgressDialog pd;
 
     @BindView(R.id.forgot_password_link) TextView forgotPassLink;
     @BindView(R.id.login_button) Button loginButton;
@@ -59,8 +57,6 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        pd = new ProgressDialog(context);
-
         signupLink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -73,14 +69,11 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //show the progress dialog
-                pd.setMessage("Logging In..");
-                pd.setCanceledOnTouchOutside(false);
-                pd.show();
-
+                MaterialDialog loading = getLoadingDialog(context, R.string.loading,R.string.logging_in).show();
                 email = inputEmail.getText().toString().trim();
                 password = inputPassword.getText().toString().trim();
                 if (!validateForm()) {
-                    pd.dismiss();
+                    loading.dismiss();
                     return;
                 }
                 validateUser(email, password);
@@ -101,13 +94,13 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        pd.dismiss();
+
                         if (task.isSuccessful()) {
                             saveUserDetails(mAuth);
                             finish();
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         } else {
-                            pd.dismiss();
+
                             showToast(context, getString(R.string.login_fail_message));
                         }
                     }
