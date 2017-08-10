@@ -2,7 +2,6 @@ package com.talenttakeaways.kristaljewels;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +21,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.gson.Gson;
 import com.talenttakeaways.kristaljewels.beans.User;
 import com.talenttakeaways.kristaljewels.others.CommonFunctions;
 import com.talenttakeaways.kristaljewels.others.Constants;
@@ -31,7 +29,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.talenttakeaways.kristaljewels.others.CommonFunctions.getDismissDialog;
-import static com.talenttakeaways.kristaljewels.others.CommonFunctions.getLoadingDialog;
 import static com.talenttakeaways.kristaljewels.others.CommonFunctions.showToast;
 
 public class LoginActivity extends AppCompatActivity {
@@ -42,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.signup_link) TextView signupLink;
     @BindView(R.id.login_email) EditText inputEmail;
     @BindView(R.id.login_password) EditText inputPassword;
+    MaterialDialog loading;
 
     //strings
     private String email, password;
@@ -52,10 +50,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_login);
+        setContentView(R.layout.activity_login);
         ButterKnife.bind(context);
 
         mAuth = FirebaseAuth.getInstance();
+        loading = CommonFunctions.getLoadingDialog(context, R.string.loading,R.string.please_wait).build();
 
         signupLink.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //show the progress dialog
-                MaterialDialog loading = getLoadingDialog(context, R.string.loading,R.string.logging_in).show();
+                loading.show();
                 email = inputEmail.getText().toString().trim();
                 password = inputPassword.getText().toString().trim();
                 if (!validateForm()) {
@@ -94,13 +93,12 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-
                         if (task.isSuccessful()) {
                             saveUserDetails(mAuth);
                             finish();
                             startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         } else {
-
+                            loading.dismiss();
                             showToast(context, getString(R.string.login_fail_message));
                         }
                     }
@@ -115,13 +113,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
-
-                        SharedPreferences sp = getSharedPreferences(Constants.currentUser, MODE_PRIVATE);
-                        SharedPreferences.Editor editor = sp.edit();
-                        String userAsJson = new Gson().toJson(user);
-                        editor.putString(Constants.currentUser, userAsJson).apply();
+                        CommonFunctions.setCurrentUser(context, user);
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
                     }
@@ -136,14 +129,12 @@ public class LoginActivity extends AppCompatActivity {
                 .input("Email Id", null, new MaterialDialog.InputCallback() {
                     @Override
                     public void onInput(MaterialDialog dialog, CharSequence input) {
-                        final MaterialDialog loader = CommonFunctions.getLoadingDialog(context,
-                                        R.string.loading, R.string.please_wait).show();
-
+                        loading.show();
                         FirebaseAuth.getInstance().sendPasswordResetEmail(input.toString())
                                 .addOnCompleteListener(new OnCompleteListener<Void>() {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
-                                        loader.dismiss();
+                                        loading.dismiss();
                                         if (task.isSuccessful()) {
 
                                             getDismissDialog(context, R.string.success,

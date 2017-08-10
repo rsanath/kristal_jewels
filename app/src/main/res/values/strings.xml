@@ -10,8 +10,6 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
-    <string name="CART_ITEMS">CART_ITEMS</string>
-    <string name="CART">CART</string>
 
     <string name="forgot_pass_title">Forgot Password</string>
     <string name="forgot_pass_content">Enter your email id to send the password reset link</string>
@@ -25,5 +23,8 @@
     <string name="please_wait">Please Wait</string>
     <string name="try_later">Please try again later.</string>
     <string name="logging_in">Logging In</string>
+    <string name="review_title">Add Review</string>
+    <string name="add">Add</string>
+    <string name="cancel">Cancel</string>
 
 </resources>

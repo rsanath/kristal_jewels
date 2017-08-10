@@ -1,16 +1,15 @@
 package com.talenttakeaways.kristaljewels;
 
+import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -34,9 +33,13 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.talenttakeaways.kristaljewels.adapters.ProductsAdapter;
 import com.talenttakeaways.kristaljewels.beans.Product;
+import com.talenttakeaways.kristaljewels.others.CommonFunctions;
 import com.talenttakeaways.kristaljewels.others.Constants;
 
 import java.util.ArrayList;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by sanath on 13/06/17.
@@ -44,7 +47,6 @@ import java.util.ArrayList;
 
 public class ProductListActivity extends AppCompatActivity {
 
-    RecyclerView recyclerView;
     ProductsAdapter productsAdapter;
     ArrayList<Product> productsList = new ArrayList<Product>();
 
@@ -53,27 +55,30 @@ public class ProductListActivity extends AppCompatActivity {
     DatabaseReference dbRef;
     Query query;
 
-    //toolbar and navigation drawer
-    private Toolbar toolbar;
-    private DrawerLayout drawerLayout;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.info_card) CardView infoCard;
+    @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.info_text) TextView infoText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        Activity context = this;
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_product_list);
-
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setContentView(R.layout.activity_recycler_view);
+        ButterKnife.bind(context);
         setSupportActionBar(toolbar);
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        if (!CommonFunctions.isNetworkAvailable(context)) {
+            infoCard.setVisibility(View.VISIBLE);
+            infoText.setText("No Internet\nPlease check your network and try again");
+        }
+        infoCard.setVisibility(View.VISIBLE);
 
-        initNavigationDrawer();
+        CommonFunctions.initNavigationDrawer(context, toolbar, true);
 
         fbUser = FirebaseAuth.getInstance().getCurrentUser();
         dbRef = FirebaseDatabase.getInstance().getReference();
 
         productsAdapter = new ProductsAdapter(this, productsList);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(this, 2);
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(10), true));
@@ -121,13 +126,13 @@ public class ProductListActivity extends AppCompatActivity {
 
     public void loadData() {
         Intent intent = getIntent();
-        String from, type, categoryName, searchQueryName;
+        String from, categoryName, searchQueryName;
 
         from = intent.getExtras().getString("from");
-        type = intent.getExtras().getString("type");
 
         if (from.equals("button")) {
             categoryName = intent.getExtras().getString("category");
+            toolbar.setTitle(categoryName);
             dbRef.child("products").orderByChild("productCategory").equalTo(categoryName)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -137,6 +142,7 @@ public class ProductListActivity extends AppCompatActivity {
                                 Log.d("Category Results ", product.getProductName() + product.getProductColors());
                                 productsList.add(product);
                             }
+                            infoCard.setVisibility(View.GONE);
                             recyclerView.setAdapter(productsAdapter);
                         }
 
@@ -147,6 +153,7 @@ public class ProductListActivity extends AppCompatActivity {
                     });
         } else if (from.equals("search")) {
             searchQueryName = intent.getExtras().getString("search");
+            toolbar.setTitle("Results: " + searchQueryName);
             dbRef.child("products").orderByChild("productTag").startAt(searchQueryName)
                     .addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
@@ -156,6 +163,7 @@ public class ProductListActivity extends AppCompatActivity {
                                 Log.d("Search Results ", product.getProductName() + product.getProductColors());
                                 productsList.add(product);
                             }
+                            infoCard.setVisibility(View.GONE);
                             recyclerView.setAdapter(productsAdapter);
                         }
 
@@ -170,56 +178,6 @@ public class ProductListActivity extends AppCompatActivity {
     private int dpToPx(int dp) {
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
-
-    public void initNavigationDrawer() {
-        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.nav_home:
-                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_all_categories:
-                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_settings:
-                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_faq:
-                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_about:
-                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_logout:
-                        mAuth.signOut();
-                        finish();
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                        break;
-                }
-                return true;
-            }
-        });
-        View header = navigationView.getHeaderView(0);
-        TextView userName = (TextView) header.findViewById(R.id.nav_header_text);
-        userName.setText("TODO userName");
-
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
     }
 
     /**

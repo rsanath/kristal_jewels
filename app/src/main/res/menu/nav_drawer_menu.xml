@@ -1,31 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:checkableBehavior="single">
+    <group
+        android:id="@+id/all_items_group"
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nav_home"
-            android:icon="@drawable/ic_home_black_24dp"
+            android:icon="@drawable/home"
             android:title="Home" />
-        <item
-            android:id="@+id/nav_all_categories"
-            android:icon="@drawable/ic_shopping_basket_black_24dp"
-            android:title="All Categories"/>
+
+        <group>
+
+            <item
+                android:title="All Categories">
+                <menu>
+                    <item
+                        android:id="@+id/nav_Necklace"
+                        android:icon="@drawable/ic_star_black"
+                        android:title="Necklace" />
+                    <item
+                        android:id="@+id/nav_Bangles"
+                        android:icon="@drawable/ic_star_black"
+                        android:title="Bangles" />
+                    <item
+                        android:id="@+id/nav_Rings"
+                        android:icon="@drawable/ic_star_black"
+                        android:title="Rings" />
+                    <item
+                        android:id="@+id/nav_Earrings"
+                        android:icon="@drawable/ic_star_black"
+                        android:title="Ear Rings" />
+                </menu>
+            </item>
+        </group>
+
         <item
             android:id="@+id/nav_faq"
             android:icon="@drawable/ic_question_answer_black_24dp"
-            android:title="FAQ"/>
+            android:title="FAQ" />
         <item
             android:id="@+id/nav_about"
-            android:icon="@drawable/ic_info_black_24dp"
-            android:title="About"/>
+            android:icon="@drawable/info"
+            android:title="About" />
         <item
             android:id="@+id/nav_settings"
             android:icon="@drawable/ic_settings_black_24dp"
-            android:title="Settings"/>
+            android:title="Settings" />
         <item
             android:id="@+id/nav_logout"
-            android:icon="@drawable/ic_exit_to_app_black_24dp"
-            android:title="Logout"/>
+            android:icon="@drawable/exit_to_app"
+            android:title="Logout" />
     </group>
 
 

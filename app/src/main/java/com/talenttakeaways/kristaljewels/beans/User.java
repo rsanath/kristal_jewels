@@ -1,18 +1,38 @@
 package com.talenttakeaways.kristaljewels.beans;
 
+import java.util.ArrayList;
+
 /**
  * Created by sanath on 09/06/17.
  */
 
 public class User {
-    public String name, email, password, number, isAdmin;
+    private String name, email, number, userId;
+    private boolean admin;
+    private ArrayList<ShippingDetail> shippingDetails;
 
-    public User(String name, String email, String password, String number, String isAdmin) {
+    public User(String userId, String name, String email, String number, boolean admin) {
+        this.userId = userId;
         this.name = name;
         this.email = email;
-        this.password = password;
         this.number = number;
-        this.isAdmin = isAdmin;
+        this.admin = admin;
+    }
+
+    public ArrayList<ShippingDetail> getShippingDetails() {
+        return shippingDetails;
+    }
+
+    public void setShippingDetails(ArrayList<ShippingDetail> shippingDetails) {
+        this.shippingDetails = shippingDetails;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getName() {
@@ -31,14 +51,6 @@ public class User {
         this.email = email;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
     public String getNumber() {
         return number;
     }
@@ -47,12 +59,12 @@ public class User {
         this.number = number;
     }
 
-    public String getIsAdmin() {
-        return isAdmin;
+    public boolean isAdmin() {
+        return admin;
     }
 
-    public void setIsAdmin(String isAdmin) {
-        this.isAdmin = isAdmin;
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 
     public User() {

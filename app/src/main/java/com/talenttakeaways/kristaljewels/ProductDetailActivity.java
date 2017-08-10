@@ -1,18 +1,17 @@
 package com.talenttakeaways.kristaljewels;
 
+import android.app.Activity;
 import android.app.SearchManager;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,13 +21,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.github.paolorotolo.expandableheightlistview.ExpandableHeightListView;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -36,17 +40,24 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.talenttakeaways.kristaljewels.adapters.CommentsAdapter;
+import com.talenttakeaways.kristaljewels.beans.CartItem;
 import com.talenttakeaways.kristaljewels.beans.Product;
 import com.talenttakeaways.kristaljewels.beans.Review;
+import com.talenttakeaways.kristaljewels.beans.User;
+import com.talenttakeaways.kristaljewels.others.CommonFunctions;
 import com.talenttakeaways.kristaljewels.others.Constants;
 
 import org.parceler.Parcels;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 public class ProductDetailActivity extends AppCompatActivity {
+    Activity context = this;
 
     FirebaseUser fbUser;
     DatabaseReference db;
@@ -58,14 +69,16 @@ public class ProductDetailActivity extends AppCompatActivity {
     ExpandableHeightListView productComments;
     Product product;
     Button commentButton, addToCart, buyNow;
+    CommentsAdapter myCommentsAdapter;
 
-    private Toolbar toolbar;
-    private DrawerLayout drawerLayout;
 
+    @BindView(R.id.toolbar) Toolbar toolbar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_product_detail);
+        setContentView(R.layout.activity_product_detail);
+        ButterKnife.bind(context);
+        setSupportActionBar(toolbar);
 
         Intent intent = getIntent();
         product = Parcels.unwrap(intent.getParcelableExtra("product"));
@@ -75,9 +88,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle(product.getProductName());
         setSupportActionBar(toolbar);
-        initNavigationDrawer();
         setView();
-
+        CommonFunctions.initNavigationDrawer(context, toolbar, true);
     }
 
 
@@ -98,6 +110,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 startActivity(intent);
                 return false;
             }
+
 
             @Override
             public boolean onQueryTextChange(String newText) {
@@ -163,60 +176,87 @@ public class ProductDetailActivity extends AppCompatActivity {
         addToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addToCart();
+                ArrayList<CartItem> cartItems = CommonFunctions.getCartItems(context);
+                for (CartItem item : cartItems) {
+                    if (item.getProduct().getProductId().equals(product.getProductId())) {
+                        CommonFunctions.showToast(context, "Already in Cart");
+                        return;
+                    }
+                }
+                cartItems.add(new CartItem(product, 1));
+                CommonFunctions.setCartItems(context, cartItems);
+                CommonFunctions.showToast(context, product.getProductName() + " added to cart");
             }
         });
     }
 
-    public void addComment(){
-        final EditText commentTextView = new EditText(ProductDetailActivity.this);
-        commentTextView.setSelectAllOnFocus(true);
-        commentTextView.setHint("Write here");
+    public void addComment() {
 
-        final AlertDialog.Builder commentDialog = new AlertDialog.Builder(ProductDetailActivity.this);
+        Gson gson = new Gson();
+        SharedPreferences sp = getSharedPreferences(Constants.currentUser, MODE_PRIVATE);
+        String userString = sp.getString(Constants.currentUser, null);
+        final User user = gson.fromJson(userString, User.class);
 
-        commentDialog.setView(commentTextView);
-        commentDialog.setTitle("Your Comment");
+        final MaterialDialog commentDialog = new MaterialDialog.Builder(context)
+                .title(R.string.review_title)
+                .customView(R.layout.dialog_add_review, false)
+                .positiveText(R.string.add)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(final MaterialDialog dialog, DialogAction which) {
+                        View v = dialog.getCustomView();
+                        EditText userReviewText = (EditText) v.findViewById(R.id.user_review);
+                        RatingBar userRatingBar = (RatingBar) v.findViewById(R.id.user_rating);
+                        String userReview = userReviewText.getText().toString();
+                        float userRating = userRatingBar.getRating();
 
-        commentDialog.setPositiveButton("Comment", new DialogInterface.OnClickListener() {
+                        Review review = new Review();
+                        review.setReviewAuthorId(user.getUserId());
+                        review.setReviewAuthorName(user.getName());
+                        review.setReviewMessage(userReview);
+                        review.setReviewRating(String.valueOf(userRating));
+                        String reviewId = db.push().getKey();
+                        review.setReviewId(reviewId);
+
+                        db.child(Constants.comments)
+                                .child(product.getProductId())
+                                .child(reviewId).setValue(review)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isComplete()){
+                                            loadComments();
+                                        }
+                                    }
+                                });
+                    }
+                })
+                .negativeText(R.string.cancel)
+                .show();
+
+        commentDialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+
+        EditText userReview = (EditText) commentDialog.getView().findViewById(R.id.user_review);
+
+                userReview.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(DialogInterface dialog, int which) {
-                String commentMessage = commentTextView.getText().toString();
-                String commentId = db.push().getKey();
-                String commenterId = fbUser.getUid();
-
-                SharedPreferences sp = getSharedPreferences("CURRENT_USER", MODE_PRIVATE);
-                String commenterName = sp.getString("CURRENT_USER_NAME", commenterId);
-
-//                Review comments = new Review(commentId, commenterName, commentMessage, commenterId);
-//                db.child("comments").child(product.getProductId()).child(commentId).setValue(comments);
-                loadComments();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() < 20) {
+                    commentDialog.getActionButton(DialogAction.POSITIVE).setEnabled(false);
+                } else {
+                    commentDialog.getActionButton(DialogAction.POSITIVE).setEnabled(true);
+                }
             }
         });
-
-        commentDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-        commentDialog.show();
-    }
-
-    public void addToCart(){
-        SharedPreferences s = getSharedPreferences(getString(R.string.CART), MODE_PRIVATE);
-        SharedPreferences.Editor editor = s.edit();
-        HashSet<String> cartItems = (HashSet<String>) s.getStringSet(getString(R.string.CART_ITEMS), new HashSet<String>());
-        cartItems.add(product.getProductName());
-        editor.clear();
-        editor.putStringSet(getString(R.string.CART_ITEMS), cartItems).commit();
-        Toast.makeText(ProductDetailActivity.this, "Item "+product.getProductName()+" added to cart",
-                Toast.LENGTH_SHORT).show();
     }
 
     public void loadComments(){
         final ArrayList<Review> comments = new ArrayList<Review>();
-        db.child("comments").child(product.getProductId()).addListenerForSingleValueEvent(new ValueEventListener() {
+        db.child(Constants.comments).child(product.getProductId()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 ArrayList<String> commentTexts = new ArrayList<String>();
@@ -224,7 +264,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                     Review comment = commentsResult.getValue(Review.class);
                     comments.add(comment);
                 }
-                CommentsAdapter myCommentsAdapter = new CommentsAdapter(getApplicationContext(), comments);
+                myCommentsAdapter = new CommentsAdapter(getApplicationContext(), comments);
                 productComments.setAdapter(myCommentsAdapter);
                 productComments.setExpanded(true);
             }
@@ -235,53 +275,4 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
     }
 
-    public void initNavigationDrawer() {
-        final FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.nav_home:
-                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_all_categories:
-                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_settings:
-                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_faq:
-                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_about:
-                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_logout:
-                        mAuth.signOut();
-                        finish();
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                        break;
-                }
-                return true;
-            }
-        });
-        View header = navigationView.getHeaderView(0);
-        TextView userName = (TextView) header.findViewById(R.id.nav_header_text);
-        userName.setText("TODO userName");
-
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
-    }
 }

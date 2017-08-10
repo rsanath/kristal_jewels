@@ -25,7 +25,7 @@ public class SplashScreenActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_splash_screen);
+        setContentView(R.layout.activity_splash_screen);
 
         mAuth = FirebaseAuth.getInstance();
 

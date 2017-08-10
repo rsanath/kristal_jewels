@@ -32,7 +32,7 @@
                     android:id="@+id/product_cover"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:src="@drawable/def_img" />
+                    android:src="@drawable/default_placeholder" />
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -142,7 +142,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="#ff7e14"
+                        android:background="@color/buynow_orange"
                         android:text="buy now"
                         android:textColor="#fff"
                         android:textSize="18sp"
@@ -214,7 +214,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        app:headerLayout="@layout/nav_drawer_header"
+        app:headerLayout="@layout/header_nav_drawer"
         app:menu="@menu/nav_drawer_menu" />
 </android.support.v4.widget.DrawerLayout>
 

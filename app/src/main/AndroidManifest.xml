@@ -3,32 +3,6 @@
     package="com.talenttakeaways.kristaljewels">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <compatible-screens>
-        <screen android:screenSize="small" android:screenDensity="ldpi" />
-        <screen android:screenSize="small" android:screenDensity="mdpi" />
-        <screen android:screenSize="small" android:screenDensity="hdpi" />
-        <screen android:screenSize="small" android:screenDensity="xhdpi" />
-        <screen android:screenSize="small" android:screenDensity="420" />
-        <screen android:screenSize="small" android:screenDensity="480" />
-        <screen android:screenSize="small" android:screenDensity="560" />
-        <screen android:screenSize="small" android:screenDensity="640" />
-        <screen android:screenSize="normal" android:screenDensity="ldpi" />
-        <screen android:screenSize="normal" android:screenDensity="mdpi" />
-        <screen android:screenSize="normal" android:screenDensity="hdpi" />
-        <screen android:screenSize="normal" android:screenDensity="xhdpi" />
-        <screen android:screenSize="normal" android:screenDensity="420" />
-        <screen android:screenSize="normal" android:screenDensity="480" />
-        <screen android:screenSize="normal" android:screenDensity="560" />
-        <screen android:screenSize="normal" android:screenDensity="640" />
-        <screen android:screenSize="large" android:screenDensity="ldpi" />
-        <screen android:screenSize="large" android:screenDensity="mdpi" />
-        <screen android:screenSize="large" android:screenDensity="hdpi" />
-        <screen android:screenSize="large" android:screenDensity="xhdpi" />
-        <screen android:screenSize="large" android:screenDensity="420" />
-        <screen android:screenSize="large" android:screenDensity="480" />
-        <screen android:screenSize="large" android:screenDensity="560" />
-        <screen android:screenSize="large" android:screenDensity="640" />
-    </compatible-screens>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -36,25 +10,34 @@
         android:roundIcon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".LoginActivity"></activity>
-        <activity android:name=".SignupActivity" />
+        <activity
+            android:name=".LoginActivity"
+            android:label="Login" />
+        <activity
+            android:name=".SignupActivity"
+            android:label="Sign Up" />
         <activity
             android:name=".HomeActivity"
+            android:label="Home"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".ProductListActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".ProductListActivity"
+            android:label="Products"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".SplashScreenActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".CartActivity" android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".CartActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".ProductDetailActivity"
-            android:label="@string/title_activity_product_detail"
-            android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
+            android:label="Product"
+            android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden|adjustResize|adjustPan" />
     </application>
 

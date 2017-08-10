@@ -19,7 +19,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            app:srcCompat="@drawable/def_img" />
+            app:srcCompat="@drawable/default_placeholder" />
 
         <TextView
             android:id="@+id/product_title"

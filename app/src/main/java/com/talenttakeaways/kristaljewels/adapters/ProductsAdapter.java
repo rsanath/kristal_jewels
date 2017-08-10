@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,9 +12,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.drawable.GlideDrawable;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 import com.talenttakeaways.kristaljewels.ProductDetailActivity;
 import com.talenttakeaways.kristaljewels.R;
 import com.talenttakeaways.kristaljewels.beans.Product;
@@ -59,7 +55,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
         @Override
         public ProductsHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View itemView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.card_product, parent, false);
+                    .inflate(R.layout.list_item_product, parent, false);
             return new ProductsHolder(itemView);
         }
 
@@ -69,21 +65,11 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             holder.title.setText(product.getProductName());
             holder.price.setText(product.getProductPrice());
             if(product.getProductImages() != null){
-                Glide.with(mContext).load(product.getProductImages().get(1)).
-                        listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        Log.e("IMAGE_EXCEPTION", "Exception " + e.toString());
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        Log.d("", "Sometimes the image is not loaded and this text is not displayed");
-                        return false;
-                    }
-                }).diskCacheStrategy(DiskCacheStrategy.SOURCE).placeholder(R.drawable.def_img).into(holder.cover);
-
+                Glide.with(mContext)
+                        .load(product.getProductImages().get(1))
+                        .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                        .placeholder(R.drawable.default_placeholder)
+                        .into(holder.cover);
             }
 
             //Adds the clicked product info and starts the productdeails activity

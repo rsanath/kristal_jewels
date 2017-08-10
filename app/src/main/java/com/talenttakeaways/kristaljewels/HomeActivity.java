@@ -1,17 +1,14 @@
 package com.talenttakeaways.kristaljewels;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -19,17 +16,19 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.talenttakeaways.kristaljewels.adapters.SliderAdapter;
+import com.talenttakeaways.kristaljewels.others.CommonFunctions;
 import com.talenttakeaways.kristaljewels.others.Constants;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import me.relex.circleindicator.CircleIndicator;
 
 /**
@@ -37,6 +36,9 @@ import me.relex.circleindicator.CircleIndicator;
  */
 
 public class HomeActivity extends AppCompatActivity {
+    Activity context = this;
+
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     int counter = 0;
 
@@ -50,19 +52,18 @@ public class HomeActivity extends AppCompatActivity {
     ImageView categoryImage1, categoryImage2, categoryImage3, categoryImage4;
     ProgressDialog pd;
 
-    //toolbar and navigation drawer
-    private Toolbar toolbar;
-    private DrawerLayout drawerLayout;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_home);
+        setContentView(R.layout.activity_home);
+        ButterKnife.bind(context);
+        setSupportActionBar(toolbar);
 
         mAuth = FirebaseAuth.getInstance();
         checkLoginStatus();
         initSlider();
-        initNavigationDrawer();
+        CommonFunctions.initNavigationDrawer(context, toolbar, false);
 
         categoryImage1 = (ImageView) findViewById(R.id.section_image_1);
         categoryImage1.setOnClickListener(new View.OnClickListener() {
@@ -185,63 +186,6 @@ public class HomeActivity extends AppCompatActivity {
                 handler.post(Update);
             }
         }, 3500, 3500);
-    }
-
-    public void initNavigationDrawer() {
-        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.nav_home:
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_all_categories:
-                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_settings:
-                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_faq:
-                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_about:
-                        //startActivity(new Intent(getApplicationContext(), HomeActivity.class));
-                        drawerLayout.closeDrawers();
-                        break;
-                    case R.id.nav_logout:
-                        mAuth.signOut();
-                        finish();
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
-                        break;
-                }
-                return true;
-            }
-        });
-        View header = navigationView.getHeaderView(0);
-        TextView userName = (TextView) header.findViewById(R.id.nav_header_text);
-        userName.setText("TODO userName");
-        drawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
-
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        ActionBarDrawerToggle actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close) {
-
-            @Override
-            public void onDrawerClosed(View v) {
-                super.onDrawerClosed(v);
-            }
-
-            @Override
-            public void onDrawerOpened(View v) {
-                super.onDrawerOpened(v);
-            }
-        };
-        drawerLayout.addDrawerListener(actionBarDrawerToggle);
-        actionBarDrawerToggle.syncState();
     }
 }
 

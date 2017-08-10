@@ -1,6 +1,7 @@
 package com.talenttakeaways.kristaljewels;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -20,10 +21,14 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.talenttakeaways.kristaljewels.beans.User;
+import com.talenttakeaways.kristaljewels.others.CommonFunctions;
+import com.talenttakeaways.kristaljewels.others.Constants;
 
 
 public class SignupActivity extends AppCompatActivity
 {
+    Context context = this;
+
     EditText email,number,password,name;
     TextView loginLink;
     Button registerButton;
@@ -39,7 +44,7 @@ public class SignupActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.layout_signup);
+        setContentView(R.layout.activity_signup);
 
         mAuth = FirebaseAuth.getInstance();
         pd = new ProgressDialog(this);
@@ -112,11 +117,11 @@ public class SignupActivity extends AppCompatActivity
         dbReference = FirebaseDatabase.getInstance().getReference();
 
         //use the container class to hold the values entered by the user
-        User myUser = new User(userName, userEmail, userPassword, userNumber, "false");
+        final User myUser = new User(userId, userName, userEmail, userNumber, false);
 
         // what happens here is we get a reference to the database/users/'usesrId'
         //then we add the user details under that structure
-        dbReference.child("users").child(userId).setValue(myUser).
+        dbReference.child(Constants.users).child(userId).setValue(myUser).
                 addOnCompleteListener(this, new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -125,6 +130,7 @@ public class SignupActivity extends AppCompatActivity
                         if (task.isSuccessful()) {
                             //If user is added to database
                             showToast("Registration Successful!");
+                            CommonFunctions.setCurrentUser(context, myUser);
                             finish();
                             startActivity(new Intent(SignupActivity.this, HomeActivity.class));
                         } else {
