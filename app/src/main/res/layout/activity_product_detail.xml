@@ -19,7 +19,6 @@
             android:layout_height="wrap_content"
             android:fitsSystemWindows="true"
             android:theme="@style/AppTheme.AppBarOverlay">
-
             <android.support.design.widget.CollapsingToolbarLayout
                 android:id="@+id/toolbar_layout"
                 android:layout_width="match_parent"
@@ -27,41 +26,30 @@
                 android:fitsSystemWindows="true"
                 app:contentScrim="?attr/colorPrimary"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
-
                 <ImageView
                     android:id="@+id/product_cover"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:src="@drawable/default_placeholder" />
-
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="?attr/actionBarSize"
                     app:layout_collapseMode="pin"
                     app:popupTheme="@style/AppTheme.PopupOverlay" />
-
             </android.support.design.widget.CollapsingToolbarLayout>
         </android.support.design.widget.AppBarLayout>
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
-            android:paddingBottom="30dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:padding="15dp"
                 android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="0px"
-                    android:layout_height="0px"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true" />
 
                 <TextView
                     android:id="@+id/product_name"
@@ -149,7 +137,19 @@
                         android:textStyle="bold" />
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/review_section_switch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="10dp"
+                    android:layout_marginTop="20dp"
+                    android:textAlignment="viewEnd"
+                    android:textColor="#333333"
+                    android:textSize="16dp"
+                    android:text="Read and Review"/>
+
                 <LinearLayout
+                    android:id="@+id/review_section"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
@@ -187,7 +187,6 @@
                         android:textSize="16dp" />
 
                     <LinearLayout
-                        android:id="@+id/review_section"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:baselineAligned="true"
@@ -207,6 +206,7 @@
 
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
+
     </android.support.design.widget.CoordinatorLayout>
 
     <android.support.design.widget.NavigationView
@@ -216,5 +216,6 @@
         android:layout_gravity="start"
         app:headerLayout="@layout/header_nav_drawer"
         app:menu="@menu/nav_drawer_menu" />
+
 </android.support.v4.widget.DrawerLayout>
 

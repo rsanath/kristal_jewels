@@ -64,21 +64,24 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     TextView productName, productPrice, productDescription;
     ImageView productImage;
-    LinearLayout reviewSection;
     Spinner productColor, productSize;
     ExpandableHeightListView productComments;
     Product product;
     Button commentButton, addToCart, buyNow;
     CommentsAdapter myCommentsAdapter;
 
-
+    @BindView(R.id.review_section) LinearLayout reviewSection;
+    @BindView(R.id.review_section_switch) TextView reviewSectionSwitch;
     @BindView(R.id.toolbar) Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
         ButterKnife.bind(context);
         setSupportActionBar(toolbar);
+
+        reviewSection.setVisibility(View.GONE);
 
         Intent intent = getIntent();
         product = Parcels.unwrap(intent.getParcelableExtra("product"));
@@ -138,7 +141,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         productDescription = (TextView) findViewById(R.id.product_description);
         commentButton = (Button) findViewById(R.id.comment_button);
         productComments = (ExpandableHeightListView) findViewById(R.id.product_comments);
-        reviewSection = (LinearLayout) findViewById(R.id.review_section);
         productSize = (Spinner) findViewById(R.id.product_size);
         productColor = (Spinner) findViewById(R.id.product_color);
         addToCart = (Button) findViewById(R.id.add_to_cart);
@@ -183,9 +185,28 @@ public class ProductDetailActivity extends AppCompatActivity {
                         return;
                     }
                 }
-                cartItems.add(new CartItem(product, 1));
+                cartItems.add(new CartItem(product, 1, productColor.getSelectedItem().toString(),
+                        productSize.getSelectedItem().toString()));
                 CommonFunctions.setCartItems(context, cartItems);
                 CommonFunctions.showToast(context, product.getProductName() + " added to cart");
+            }
+        });
+
+        reviewSectionSwitch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (reviewSection.getVisibility() == View.GONE) {
+                    reviewSection.setVisibility(View.VISIBLE);
+                    reviewSection.setAlpha(0.0f);
+                    reviewSection.animate().alpha(1.0f).setDuration(500).start();
+                } else {
+                    reviewSection.animate().alpha(0.0f).setDuration(500).withEndAction(new Runnable() {
+                        @Override
+                        public void run() {
+                            reviewSection.setVisibility(View.GONE);
+                        }
+                    });
+                }
             }
         });
     }

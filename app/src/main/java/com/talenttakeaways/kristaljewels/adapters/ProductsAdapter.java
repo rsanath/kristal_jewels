@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.talenttakeaways.kristaljewels.ProductDetailActivity;
 import com.talenttakeaways.kristaljewels.R;
 import com.talenttakeaways.kristaljewels.beans.Product;
+import com.talenttakeaways.kristaljewels.others.Constants;
 
 import org.parceler.Parcels;
 
@@ -77,7 +78,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(mContext, ProductDetailActivity.class);
-                    intent.putExtra("product", Parcels.wrap(product));
+                    intent.putExtra(Constants.product, Parcels.wrap(product));
                     mContext.startActivity(intent);
                 }
             });

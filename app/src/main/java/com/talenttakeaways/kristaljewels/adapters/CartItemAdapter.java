@@ -1,6 +1,7 @@
 package com.talenttakeaways.kristaljewels.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,10 +15,14 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.talenttakeaways.kristaljewels.ProductDetailActivity;
 import com.talenttakeaways.kristaljewels.R;
 import com.talenttakeaways.kristaljewels.beans.CartItem;
 import com.talenttakeaways.kristaljewels.beans.Product;
 import com.talenttakeaways.kristaljewels.others.CommonFunctions;
+import com.talenttakeaways.kristaljewels.others.Constants;
+
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 
@@ -51,8 +56,10 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
         final Product product = cartItem.getProduct();
 
         holder.itemName.setText(product.getProductName());
-        holder.itemPrice.setText(product.getProductPrice());
+        holder.itemPrice.setText(product.getProductPrice() + " $");
         holder.itemQuantity.setText(String.valueOf(cartItem.getQuantity()));
+        holder.itemColor.setText(cartItem.getColor());
+        holder.itemSize.setText(cartItem.getSize());
 
         Glide.with(context)
                 .load(product.getProductImages().get(1))
@@ -101,6 +108,15 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
                 }).show();
             }
         });
+
+        holder.cartItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(context, ProductDetailActivity.class);
+                intent.putExtra(Constants.product, Parcels.wrap(product));
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -112,6 +128,8 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
         View view;
         @BindView(R.id.cart_name) TextView itemName;
         @BindView(R.id.cart_price) TextView itemPrice;
+        @BindView(R.id.cart_item_color) TextView itemColor;
+        @BindView(R.id.cart_item_size) TextView itemSize;
         @BindView(R.id.cart_item_quantity) TextView itemQuantity;
         @BindView(R.id.cart_inc_quantity) Button itemIncButton;
         @BindView(R.id.cart_dec_quantity) Button itemDecButton;

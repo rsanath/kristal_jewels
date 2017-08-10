@@ -8,10 +8,13 @@ public class CartItem {
 
     Product product;
     int quantity;
+    String color, size;
 
-    public CartItem(Product product, int quantity) {
+    public CartItem(Product product, int quantity, String color, String size) {
         this.product = product;
         this.quantity = quantity;
+        this.color = color;
+        this.size = size;
     }
 
     public CartItem() {
@@ -31,5 +34,21 @@ public class CartItem {
 
     public void setQuantity(int quantity) {
         this.quantity = quantity;
+    }
+
+    public String getColor() {
+        return color;
+    }
+
+    public void setColor(String color) {
+        this.color = color;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 }

@@ -23,6 +23,7 @@ public class Constants {
     public static final String currentUser = "CURRENT_USER";
     public static final String comments = "comments";
     public static final String cartItems = "CART";
+    public static final String product = "product";
     public static final Type cartItemsType = new TypeToken<ArrayList<CartItem>>(){}.getType();
 
 }
