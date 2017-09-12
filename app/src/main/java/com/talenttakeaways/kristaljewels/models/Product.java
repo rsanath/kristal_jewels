@@ -1,4 +1,4 @@
-package com.talenttakeaways.kristaljewels.beans;
+package com.talenttakeaways.kristaljewels.models;
 
 import org.parceler.Parcel;
 
@@ -97,4 +97,19 @@ public class Product {
         this.productColors = productColors;
     }
 
+    @Override
+    public String toString() {
+        return "Product{" +
+                "productId='" + productId + '\'' +
+                ", productName='" + productName + '\'' +
+                ", productPrice='" + productPrice + '\'' +
+                ", productDescription='" + productDescription + '\'' +
+                ", productCategory='" + productCategory + '\'' +
+                ", productTag='" + productTag + '\'' +
+                ", productStockLeft='" + productStockLeft + '\'' +
+                ", productImages=" + productImages +
+                ", productSizes=" + productSizes +
+                ", productColors=" + productColors +
+                '}';
+    }
 }

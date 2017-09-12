@@ -1,7 +1,7 @@
 package com.talenttakeaways.kristaljewels.others;
 
 import com.google.gson.reflect.TypeToken;
-import com.talenttakeaways.kristaljewels.beans.CartItem;
+import com.talenttakeaways.kristaljewels.models.CartItem;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

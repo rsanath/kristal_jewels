@@ -1,4 +1,4 @@
-package com.talenttakeaways.kristaljewels.beans;
+package com.talenttakeaways.kristaljewels.models;
 
 /**
  * Created by sanath on 14/06/17.

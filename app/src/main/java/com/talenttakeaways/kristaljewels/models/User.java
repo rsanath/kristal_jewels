@@ -1,4 +1,4 @@
-package com.talenttakeaways.kristaljewels.beans;
+package com.talenttakeaways.kristaljewels.models;
 
 import java.util.ArrayList;
 
@@ -68,5 +68,17 @@ public class User {
     }
 
     public User() {
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", number='" + number + '\'' +
+                ", userId='" + userId + '\'' +
+                ", admin=" + admin +
+                ", shippingDetails=" + shippingDetails +
+                '}';
     }
 }

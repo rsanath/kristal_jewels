@@ -10,7 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.talenttakeaways.kristaljewels.R;
-import com.talenttakeaways.kristaljewels.beans.Review;
+import com.talenttakeaways.kristaljewels.models.Review;
 
 import java.util.ArrayList;
 

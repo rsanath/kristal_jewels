@@ -12,9 +12,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.talenttakeaways.kristaljewels.ProductDetailActivity;
+import com.talenttakeaways.kristaljewels.ui.ProductActivity;
 import com.talenttakeaways.kristaljewels.R;
-import com.talenttakeaways.kristaljewels.beans.Product;
+import com.talenttakeaways.kristaljewels.models.Product;
 import com.talenttakeaways.kristaljewels.others.Constants;
 
 import org.parceler.Parcels;
@@ -77,7 +77,7 @@ public class ProductsAdapter extends RecyclerView.Adapter<ProductsAdapter.Produc
             holder.productCard.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent(mContext, ProductDetailActivity.class);
+                    Intent intent = new Intent(mContext, ProductActivity.class);
                     intent.putExtra(Constants.product, Parcels.wrap(product));
                     mContext.startActivity(intent);
                 }

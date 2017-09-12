@@ -19,9 +19,10 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.talenttakeaways.kristaljewels.beans.User;
+import com.talenttakeaways.kristaljewels.models.User;
 import com.talenttakeaways.kristaljewels.others.CommonFunctions;
 import com.talenttakeaways.kristaljewels.others.Constants;
 
@@ -95,8 +96,6 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             saveUserDetails(mAuth);
-                            finish();
-                            startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                         } else {
                             loading.dismiss();
                             showToast(context, getString(R.string.login_fail_message));
@@ -107,16 +106,20 @@ public class LoginActivity extends AppCompatActivity {
 
     public void saveUserDetails(FirebaseAuth mAuth) {
         final String uId = mAuth.getCurrentUser().getUid();
-        FirebaseDatabase db = FirebaseDatabase.getInstance();
-        db.getReference(Constants.users).child(uId)
+        DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+        db.child(Constants.users).child(uId)
                 .addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
                         CommonFunctions.setCurrentUser(context, user);
+                        loading.dismiss();
+                        finish();
+                        startActivity(new Intent(getApplicationContext(), HomeActivity.class));
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
+                        loading.dismiss();
                     }
                 });
     }

@@ -1,4 +1,4 @@
-package com.talenttakeaways.kristaljewels.beans;
+package com.talenttakeaways.kristaljewels.models;
 
 /**
  * Created by sanath on 10/08/17.
@@ -6,9 +6,9 @@ package com.talenttakeaways.kristaljewels.beans;
 
 public class CartItem {
 
-    Product product;
-    int quantity;
-    String color, size;
+    public Product product;
+    public int quantity;
+    public String color, size;
 
     public CartItem(Product product, int quantity, String color, String size) {
         this.product = product;

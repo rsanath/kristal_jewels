@@ -1,7 +1,7 @@
-package com.talenttakeaways.kristaljewels.adapters;
+package com.talenttakeaways.kristaljewels.cart;
 
 import android.content.Context;
-import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,16 +15,9 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.talenttakeaways.kristaljewels.ProductDetailActivity;
 import com.talenttakeaways.kristaljewels.R;
-import com.talenttakeaways.kristaljewels.beans.CartItem;
-import com.talenttakeaways.kristaljewels.beans.Product;
-import com.talenttakeaways.kristaljewels.others.CommonFunctions;
-import com.talenttakeaways.kristaljewels.others.Constants;
-
-import org.parceler.Parcels;
-
-import java.util.ArrayList;
+import com.talenttakeaways.kristaljewels.models.CartItem;
+import com.talenttakeaways.kristaljewels.models.Product;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,11 +28,11 @@ import butterknife.ButterKnife;
 
 public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartItemHolder> {
 
-    ArrayList<CartItem> cartItems;
+    ICartPresenter presenter;
     Context context;
 
-    public CartItemAdapter(ArrayList<CartItem> cartItems, Context context) {
-        this.cartItems = cartItems;
+    public CartItemAdapter(ICartPresenter presenter, Context context) {
+        this.presenter = presenter;
         this.context = context;
     }
 
@@ -52,7 +45,8 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
 
     @Override
     public void onBindViewHolder(final CartItemHolder holder, final int position) {
-        final CartItem cartItem = cartItems.get(position);
+
+        final CartItem cartItem = presenter.getCartItemAtPosition(position);
         final Product product = cartItem.getProduct();
 
         holder.itemName.setText(product.getProductName());
@@ -60,7 +54,6 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
         holder.itemQuantity.setText(String.valueOf(cartItem.getQuantity()));
         holder.itemColor.setText(cartItem.getColor());
         holder.itemSize.setText(cartItem.getSize());
-
         Glide.with(context)
                 .load(product.getProductImages().get(1))
                 .diskCacheStrategy(DiskCacheStrategy.SOURCE)
@@ -70,62 +63,57 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.CartIt
         holder.itemDecButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int q = Integer.parseInt(holder.itemQuantity.getText().toString());
-                if (q <= 1) {return;}
-                q -= 1;
-                cartItem.setQuantity(q);
-                cartItems.set(position, cartItem);
-                CommonFunctions.setCartItems(context, cartItems);
-                holder.itemQuantity.setText(String.valueOf(q));
+                int currentQuantity = Integer.parseInt(holder.itemQuantity.getText().toString());
+                if (currentQuantity <= 1) {
+                    return;
+                }
+                holder.itemQuantity.setText(String.valueOf(--currentQuantity));
+                presenter.handleDecButtonClick(position);
             }
         });
 
         holder.itemIncButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int q = Integer.parseInt(holder.itemQuantity.getText().toString());
-                q += 1;
-                cartItem.setQuantity(q);
-                cartItems.set(position, cartItem);
-                CommonFunctions.setCartItems(context, cartItems);
-                holder.itemQuantity.setText(String.valueOf(q));
+                int currentQuantity = Integer.parseInt(holder.itemQuantity.getText().toString());
+                holder.itemQuantity.setText(String.valueOf(++currentQuantity));
+                presenter.handleIncButtonClick(position);
             }
         });
 
         holder.removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MaterialDialog.Builder dialog = CommonFunctions.getDismissDialog(context, "Confirm",
-                                "Remove "+product.getProductName()+ " ?");
-                dialog.negativeText(R.string.cancel)
+                new MaterialDialog.Builder(context)
+                        .title("Confirm ?")
+                        .content("Remove " + cartItem.getProduct().getProductName())
+                        .negativeText("Cancel")
+                        .positiveText("Yes")
                         .onPositive(new MaterialDialog.SingleButtonCallback() {
-                    @Override
-                    public void onClick(MaterialDialog dialog, DialogAction which) {
-                        cartItems.remove(position);
-                        CommonFunctions.setCartItems(context, cartItems);
-                        notifyDataSetChanged();
-                    }
-                }).show();
+                            @Override
+                            public void onClick(@NonNull MaterialDialog dialog,
+                                                @NonNull DialogAction which) {
+                                presenter.handleRemoveItem(position);
+                                notifyDataSetChanged();
+                            }
+                        }).show();
             }
         });
 
         holder.cartItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, ProductDetailActivity.class);
-                intent.putExtra(Constants.product, Parcels.wrap(product));
-                context.startActivity(intent);
+                presenter.handleItemClick(product);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return cartItems.size();
+        return presenter.getItemCount();
     }
 
     public class CartItemHolder extends RecyclerView.ViewHolder {
-        View view;
         @BindView(R.id.cart_name) TextView itemName;
         @BindView(R.id.cart_price) TextView itemPrice;
         @BindView(R.id.cart_item_color) TextView itemColor;

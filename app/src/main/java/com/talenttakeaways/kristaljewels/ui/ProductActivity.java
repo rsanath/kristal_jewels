@@ -1,4 +1,4 @@
-package com.talenttakeaways.kristaljewels;
+package com.talenttakeaways.kristaljewels.ui;
 
 import android.app.Activity;
 import android.app.SearchManager;
@@ -41,13 +41,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
+import com.talenttakeaways.kristaljewels.ProductListActivity;
+import com.talenttakeaways.kristaljewels.R;
 import com.talenttakeaways.kristaljewels.adapters.CommentsAdapter;
-import com.talenttakeaways.kristaljewels.beans.CartItem;
-import com.talenttakeaways.kristaljewels.beans.Product;
-import com.talenttakeaways.kristaljewels.beans.Review;
-import com.talenttakeaways.kristaljewels.beans.User;
+import com.talenttakeaways.kristaljewels.models.CartItem;
+import com.talenttakeaways.kristaljewels.models.Product;
+import com.talenttakeaways.kristaljewels.models.Review;
+import com.talenttakeaways.kristaljewels.models.User;
 import com.talenttakeaways.kristaljewels.others.CommonFunctions;
 import com.talenttakeaways.kristaljewels.others.Constants;
+import com.talenttakeaways.kristaljewels.product.ProductViewInterface;
 
 import org.parceler.Parcels;
 
@@ -55,8 +58,9 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class ProductDetailActivity extends AppCompatActivity {
+public class ProductActivity extends AppCompatActivity implements ProductViewInterface{
     Activity context = this;
 
     FirebaseUser fbUser;
@@ -67,9 +71,10 @@ public class ProductDetailActivity extends AppCompatActivity {
     Spinner productColor, productSize;
     ExpandableHeightListView productComments;
     Product product;
-    Button commentButton, addToCart, buyNow;
+    Button commentButton, buyNow;
     CommentsAdapter myCommentsAdapter;
 
+    @BindView(R.id.add_to_cart) Button addToCartButton;
     @BindView(R.id.review_section) LinearLayout reviewSection;
     @BindView(R.id.review_section_switch) TextView reviewSectionSwitch;
     @BindView(R.id.toolbar) Toolbar toolbar;
@@ -143,7 +148,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         productComments = (ExpandableHeightListView) findViewById(R.id.product_comments);
         productSize = (Spinner) findViewById(R.id.product_size);
         productColor = (Spinner) findViewById(R.id.product_color);
-        addToCart = (Button) findViewById(R.id.add_to_cart);
+        addToCartButton = (Button) findViewById(R.id.add_to_cart);
 
         // Set all values
         if (product.getProductImages() != null) {
@@ -159,12 +164,12 @@ public class ProductDetailActivity extends AppCompatActivity {
         productDescription.setText(product.getProductDescription());
 
         ArrayAdapter<String> colorAdapter;
-        colorAdapter = new ArrayAdapter<>(ProductDetailActivity.this, R.layout.support_simple_spinner_dropdown_item,
+        colorAdapter = new ArrayAdapter<>(ProductActivity.this, R.layout.support_simple_spinner_dropdown_item,
                 product.getProductColors().toArray(new String[0]));
         productColor.setAdapter(colorAdapter);
 
         ArrayAdapter<String> sizeAdapter;
-        sizeAdapter = new ArrayAdapter<>(ProductDetailActivity.this,
+        sizeAdapter = new ArrayAdapter<>(ProductActivity.this,
                 R.layout.support_simple_spinner_dropdown_item, product.getProductSizes().toArray(new String[1]));
         productSize.setAdapter(sizeAdapter);
 
@@ -175,7 +180,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
 
-        addToCart.setOnClickListener(new View.OnClickListener() {
+        addToCartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 ArrayList<CartItem> cartItems = CommonFunctions.getCartItems(context);
@@ -296,4 +301,19 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
     }
 
+    @OnClick(R.id.add_to_cart)
+    @Override
+    public void addToCartButtonHandler() {
+
+    }
+
+    @Override
+    public void buyNowButtonHandler() {
+
+    }
+
+    @Override
+    public void showCommentDialog() {
+
+    }
 }

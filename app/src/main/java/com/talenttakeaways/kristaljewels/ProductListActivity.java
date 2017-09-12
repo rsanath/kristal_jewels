@@ -32,9 +32,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.talenttakeaways.kristaljewels.adapters.ProductsAdapter;
-import com.talenttakeaways.kristaljewels.beans.Product;
+import com.talenttakeaways.kristaljewels.models.Product;
 import com.talenttakeaways.kristaljewels.others.CommonFunctions;
 import com.talenttakeaways.kristaljewels.others.Constants;
+import com.talenttakeaways.kristaljewels.ui.CartActivity;
 
 import java.util.ArrayList;
 
@@ -56,8 +57,8 @@ public class ProductListActivity extends AppCompatActivity {
     Query query;
 
     @BindView(R.id.toolbar) Toolbar toolbar;
-    @BindView(R.id.info_card) CardView infoCard;
     @BindView(R.id.recycler_view) RecyclerView recyclerView;
+    @BindView(R.id.info_card) CardView infoCard;
     @BindView(R.id.info_text) TextView infoText;
 
     @Override
@@ -148,11 +149,11 @@ public class ProductListActivity extends AppCompatActivity {
 
                         @Override
                         public void onCancelled(DatabaseError databaseError) {
-                            Toast.makeText(getApplicationContext(), "Something went wrong :(", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_SHORT).show();
                         }
                     });
-        } else if (from.equals("search")) {
-            searchQueryName = intent.getExtras().getString("search");
+        } else if (from.equals(Constants.search)) {
+            searchQueryName = intent.getExtras().getString(Constants.search);
             toolbar.setTitle("Results: " + searchQueryName);
             dbRef.child("products").orderByChild("productTag").startAt(searchQueryName)
                     .addListenerForSingleValueEvent(new ValueEventListener() {

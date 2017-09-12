@@ -20,7 +20,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.talenttakeaways.kristaljewels.beans.User;
+import com.talenttakeaways.kristaljewels.models.User;
 import com.talenttakeaways.kristaljewels.others.CommonFunctions;
 import com.talenttakeaways.kristaljewels.others.Constants;
 
@@ -134,7 +134,6 @@ public class SignupActivity extends AppCompatActivity
                             finish();
                             startActivity(new Intent(SignupActivity.this, HomeActivity.class));
                         } else {
-                            //if it fails
                             showToast("Registration Failed!");
                         }
                     }

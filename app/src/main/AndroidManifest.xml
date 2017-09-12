@@ -31,10 +31,10 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CartActivity"
+            android:name=".ui.CartActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ProductDetailActivity"
+            android:name=".ui.ProductActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize"
             android:label="Product"
             android:theme="@style/AppTheme.NoActionBar"

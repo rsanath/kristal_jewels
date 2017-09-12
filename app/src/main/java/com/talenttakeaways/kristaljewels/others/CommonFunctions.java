@@ -24,8 +24,8 @@ import com.talenttakeaways.kristaljewels.HomeActivity;
 import com.talenttakeaways.kristaljewels.LoginActivity;
 import com.talenttakeaways.kristaljewels.ProductListActivity;
 import com.talenttakeaways.kristaljewels.R;
-import com.talenttakeaways.kristaljewels.beans.CartItem;
-import com.talenttakeaways.kristaljewels.beans.User;
+import com.talenttakeaways.kristaljewels.models.CartItem;
+import com.talenttakeaways.kristaljewels.models.User;
 
 import java.util.ArrayList;
 
@@ -125,7 +125,7 @@ public class CommonFunctions {
                         drawerLayout.closeDrawers();
                         break;
                     case R.id.nav_logout:
-                        logout();
+                        logout(context);
                         context.finish();
                         context.startActivity(new Intent(context, LoginActivity.class));
                         break;
@@ -195,13 +195,14 @@ public class CommonFunctions {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    public static void logout() {
+    public static void logout(Context context) {
         FirebaseAuth.getInstance().signOut();
+        setCurrentUser(context, null);
     }
 
 
     public static User getCurrentUser(Context context) {
-        SharedPreferences mPrefs = context.getSharedPreferences(currentUser, MODE_PRIVATE);
+        SharedPreferences mPrefs = context.getSharedPreferences(Constants.currentUser, MODE_PRIVATE);
         String userAsString = mPrefs.getString(currentUser, null);
         User user = new Gson().fromJson(userAsString, User.class);
         return user;
@@ -209,8 +210,8 @@ public class CommonFunctions {
 
     public static void setCurrentUser(Context context, User user) {
         String userAsString = new Gson().toJson(user);
-        SharedPreferences mPrefs = context.getSharedPreferences(currentUser, MODE_PRIVATE);
+        SharedPreferences mPrefs = context.getSharedPreferences(Constants.currentUser, MODE_PRIVATE);
         SharedPreferences.Editor editor = mPrefs.edit();
-        editor.putString(Constants.currentUser, userAsString).apply();
+        editor.putString(Constants.currentUser, userAsString).commit();
     }
 }

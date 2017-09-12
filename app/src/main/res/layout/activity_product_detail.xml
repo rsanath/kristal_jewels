@@ -6,7 +6,7 @@
     android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.talenttakeaways.kristaljewels.ProductDetailActivity">
+    tools:context="com.talenttakeaways.kristaljewels.ui.ProductActivity">
 
     <android.support.design.widget.CoordinatorLayout
         android:id="@+id/activityRoot"
@@ -130,8 +130,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="@color/buynow_orange"
                         android:text="buy now"
+                        android:background="@color/buynow_orange"
                         android:textColor="#fff"
                         android:textSize="18sp"
                         android:textStyle="bold" />
